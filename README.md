@@ -146,3 +146,25 @@ Lines(:,1)matlab.graphics.chart.primitive.Line，平均线，plot函数返回的
 Shadows(:,1)matlab.graphics.primitive.Patch，误差阴影，fill函数返回的填充对象
 
 Stimuli(:,1)matlab.graphics.primitive.Patch，刺激范围，fill函数返回的填充对象。如果StimuRange未指定，将不返回该参数，尝试取得该返回值将导致错误。
+# Transcode
+本包包含数据转码函数，将CollectData收集到的数据转化为适合于DrawFigure作图的格式。
+## Atrs_TrialwiseTrace
+将Atr格式数据转码为适合于TrialwiseTrace作图的格式
+### Atr格式
+(:,:)cell，第1维对应TagCode第1列，第2维对应TagCode第2列。元胞内是(1,:)cell，第2维是细胞。元胞内是(:,:)double，第1维是Trial，第2维是时间。
+### 必需参数
+Atrs(:,1)cell，每个元胞内是一个Atr数据单元
+
+TagCodes(:,2)uint8{mustBePositive}，根据所需实验条件设置的Atr元胞索引
+
+TimeIndices(1,:)uint16{mustBePositive}，要取出的时间索引（采样帧，不是真实时间）。例如1:500可取出前500帧。
+
+### 名称-值对组参数
+TrialsFromStart(1,:)uint8{mustBePositive}=[]，从开头计算，要取出哪些Trial。例如1:5取出前5个Trial
+
+TrialsFromEnd(1,:)uint8{mustBePositive}=[]，从末尾倒数，要取出哪些Trial。例如5:-1:1取出后5个Trial，并正序排列；1:5同样取出后5个Trial，但倒序排列。
+
+### 返回值（TrialwiseTrace作图数据）
+MeanLines(:,:)double，第1维是不同的平均线，第2维是一条平均线上的不同时点数值。
+
+ErrorShadows(:,:)double，第1维对应每条平均线的误差，第2维是一条平均线不同时点的误差

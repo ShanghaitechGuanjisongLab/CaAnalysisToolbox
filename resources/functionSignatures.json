@@ -251,5 +251,89 @@
 				]
 			}
 		]
+	},
+	"CollectData.Rdc3_Atr": {
+		"inputs": [
+			{
+				"name": "FilePath",
+				"kind": "required",
+				"type": "file=*.mat",
+				"purpose": "Rdc2格式文件"
+			}
+		],
+		"outputs": [
+			{
+				"name": "atr",
+				"type": [
+					"2d",
+					"cell"
+				]
+			}
+		]
+	},
+	"Transcode.Atrs_TrialwiseTrace": {
+		"inputs": [
+			{
+				"name": "Atrs",
+				"kind": "required",
+				"type": [
+					"column",
+					"cell"
+				],
+				"purpose": "每个元胞内是一个Atr数据单元"
+			},
+			{
+				"name": "TagCodes",
+				"kind": "required",
+				"type": [
+					"size=:,2",
+					"positive"
+				],
+				"purpose": "根据所需实验条件设置的Atr元胞索引"
+			},
+			{
+				"name": "TimeIndices",
+				"kind": "required",
+				"type": [
+					"row",
+					"positive"
+				],
+				"purpose": "要取出的时间索引（采样帧，不是真实时间）"
+			},
+			{
+				"name": "TrialsFromStart",
+				"kind": "namevalue",
+				"type": [
+					"row",
+					"positive"
+				],
+				"purpose": "从开头计算，要取出哪些Trial"
+			},
+			{
+				"name": "TrialsFromEnd",
+				"kind": "namevalue",
+				"type": [
+					"row",
+					"positive"
+				],
+				"purpose": "从末尾倒数，要取出哪些Trial"
+			}
+		],
+		"outputs": [
+			{
+				"name": "MeanLines",
+				"type": [
+					"2d",
+					"double"
+				]
+			},
+			{
+				"name": "ErrorShadows",
+				"type": [
+					"2d",
+					"double"
+				]
+			}
+		]
 	}
 }
