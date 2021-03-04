@@ -48,47 +48,6 @@ SubTitles(1,:)string，每个泳道的小标题。如不指定，将不显示小
 CBLabel(1,1)string，颜色棒的标签。如不指定，将不显示标签。
 
 TLStyle(1,:)cell={'TileSpacing','none','Padding','compact'}，本函数调用tiledlayout布局泳道，此处指定要传递给tiledlayout的其它参数。
-## ShadowedLine
-将平均值±误差曲线，通过中间一条均线、两边误差边界阴影的形式作图出来。
-```MATLAB
-tiledlayout("flow");
-%% 基本用法
-nexttile;
-%生成一些随机数据
-Data=rand(10,10);
-%求平均值
-Mean=mean(Data,1);
-%求误差（此处使用SEM）
-Error=std(Data,0,1)/sqrt(10);
-%作图
-DrawFigure.ShadowedLine(Mean,Error);
-%% 自定义样式
-nexttile;
-%横轴在0~1之间
-Xs=linspace(0,1,10);
-%阴影区为半透明红色
-FillStyle={"r","FaceAlpha",0.1,"LineStyle","none"};
-%图线为虚线
-PlotStyle={"--"};
-DrawFigure.ShadowedLine(Mean,Error,Xs,"ShadowStyle",FillStyle,"LineStyle",PlotStyle);
-```
-[查看示例图](+DrawFigure\示例\ShadowedLine.svg)，因为生成的是随机数据，图线位置可能不同，但样式应当一致。
-### 必需参数
-LineYs(1,:)，平均值折线Y值，将用plot函数作出
-
-ShadowHeights(1,:)，误差范围阴影高度，将用fill函数作出
-### 可选参数
-Xs(1,:)=1:numel(LineYs)，X轴对应数值向量
-### 名称-值对组参数
-LineStyle(1,:)cell={'k'}，均值折线的样式，将传递给plot函数实现
-
-ShadowStyle(1,:)cell={"k","FaceAlpha",0.2,"LineStyle","none"}，误差阴影的样式，将传递给fill函数实现
-### 参数互限
-LineYs ShadowHeights Xs，这三个向量应当具有相同的长度
-### 返回值
-Line(1,1)matlab.graphics.chart.primitive.Line，平均线，plot函数返回的图线对象
-
-Shadow(1,1)matlab.graphics.primitive.Patch，误差阴影，fill函数返回的填充对象
 ## TrialwiseTrace
 作单Trial追踪图，图上有多条相互断开的折线在X轴上排布，每条线可具有误差阴影和刺激范围
 ```MATLAB
