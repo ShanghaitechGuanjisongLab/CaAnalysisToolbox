@@ -103,7 +103,7 @@ ErrorShadows(:,:)double，第1维对应每条平均线的误差，第2维是一�
 ```MATLAB
 DrawFigure.OverallHeatmap(rand(300,300,3),"HideYAxis","ShowColorbar","ImagescStyle",{"XData",[0 3]},"SubTitles",["1" "2" "3"],"CBLabel","我是颜色棒");
 ```
-[查看示例图](+DrawFigure\示例\OverallHeatmap.svg)，因为生成的是随机数据，图线位置可能不同，但样式应当一致。
+[查看示例图](+DrawFigure/示例/OverallHeatmap.svg)，因为生成的是随机数据，图线位置可能不同，但样式应当一致。
 ### 位置参数
 Data(:,:,:)，必需，作图数据。第1维是不同的细胞，将作图为不同行；第2维是Trial内的时间轴，将作图到同一行；第3维是不同的天，将水平展开为不同的泳道
 ### 重复参数
@@ -151,7 +151,7 @@ YLimit=[0 2];
 XSpacing=0.2;
 [Lines,Shadows,Stimuli]=DrawFigure.TrialwiseTrace(Mean,Error,XSpacing,"StimuRange",StimuRange,"ShadowStyle",FillStyle,"LineStyle",PlotStyle,"Xs",Xs,"YLimit",YLimit);
 ```
-[查看示例图](+DrawFigure\示例\TrialwiseTrace.svg)，因为生成的是随机数据，图线位置可能不同，但样式应当一致。
+[查看示例图](+DrawFigure/示例/TrialwiseTrace.svg)，因为生成的是随机数据，图线位置可能不同，但样式应当一致。
 ### 必需参数
 MeanLines(:,:)，每一行是一条平均线上的不同时点数值，不同行是不同的平均线
 
