@@ -270,5 +270,70 @@
 				]
 			}
 		]
+	},
+	"CollectData.MTRMs_METRaw": {
+		"inputs": [
+			{
+				"name": "RMPaths",
+				"kind": "required",
+				"type": [
+					"column",
+					"string"
+				],
+				"purpose": "所有RM文件路径"
+			},
+			{
+				"name": "SizeT",
+				"kind": "required",
+				"type": "positive",
+				"purpose": "每个文件要截取的时间帧数，应当短于所有文件中的时间帧数，否则会出错"
+			},
+			{
+				"name": "MTPaths",
+				"kind": "ordered",
+				"type": [
+					"column",
+					"string"
+				],
+				"purpose": "所有MT文件路径"
+			},
+			{
+				"name": "TagThreshold",
+				"kind": "namevalue",
+				"type": "positive",
+				"purpose": "将Tag值逻辑化时的阈值",
+				"default": 550
+			}
+		],
+		"outputs": [
+			{
+				"name": "Mice",
+				"type": [
+					"column",
+					"string"
+				]
+			},
+			{
+				"name": "Experiments",
+				"type": [
+					"column",
+					"string"
+				]
+			},
+			{
+				"name": "Tags",
+				"type": [
+					"2d",
+					"cell"
+				]
+			},
+			{
+				"name": "Raws",
+				"type": [
+					"2d",
+					"cell"
+				]
+			}
+		]
 	}
 }

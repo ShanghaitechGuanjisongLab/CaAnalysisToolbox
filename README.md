@@ -1,4 +1,4 @@
-钙数据分析作图工具包，分为数据收集CollectData和作图DrawFigure两个子包。
+钙数据分析作图工具包，分为数据收集CollectData、数据转码Transcode和作图DrawFigure，3个子包。依赖[埃博拉酱的MATLAB工具包](https://github.com/Silver-Fang/EbolaChanMatlabToolbox)和[GuanLab杂项](https://github.com/ShanghaitechGuanjisongLab/Miscellany)
 # CollectData
 该包负责将数据文件读入内存，整理成便于引用计算分析的格式。
 ## Rdc3_Atr
@@ -23,6 +23,79 @@ raw_data(:,:,:)double，原始数据。第1维是时间，第2维是细胞，第
 FilePath(1,1)string，Rdc2格式文件
 ### 返回值
 atr(:,:)cell，Atr格式内存数据
+## MTRMs_METRaw
+将多个MTRM文件存储格式读入为METRaw内存格式
+### 输入参数
+RMPaths(:,1)string，必需，RM文件路径
+
+SizeT(1,1)uint16，必需，每个文件要截取的时间帧数，应当短于所有文件中的时间帧数，否则会出错。
+
+MTPaths(:,1)string，可选，MT文件路径。如果不指定，将根据MTRM文件命名规范自动查找MT文件。如果找不到，则对应位置的Tags元胞将为空。
+
+TagThreshold(1,1)uint16=550，名称-值对组参数，将Tag值逻辑化时的阈值
+### 返回值（METRaw）
+Mice(:,1)string，小鼠名称
+
+Experiments(1,:)string，实验名称
+
+Tags(:,:)cell，第1维是不同鼠，第2维是不同实验。元胞里是结构体标量，每个字段是电流检测设备名称，值是逻辑化的标：
+- CD1(:,1)logical
+- CD2(:,1)logical
+- ……
+
+Raws(:,:)cell，第1维是不同鼠，第2维是不同实验。元胞里是(:,:,:)single，第1维是时间，第2维是细胞，第3维是Trial
+### MTRM文件存储格式
+MTRM格式将每个Trial的钙数据存储在单独的文件中，且未经ΔF/F₀处理。直接存储。一个Trial存储单元还分为两个文件，称为MT文件和RM文件。其中MT文件存储元数据和Tag，RM文件存储钙测量值。
+#### MT文件
+MT文件的标准文件名格式是：
+```
+<鼠名>.<日期时间>.<光电参数>.<实验名>_<Trial号>.MetaTags.mat
+```
+包含两个字段：
+
+MetaData(1,1)struct
+- ScannerType(1,1)string，扫描器类型，可以是"Resonant"或"Galvano"
+- DeviceNames(:,1)string，采集设备名，如"RNDD4G"、"CD1"等。每行对应一个图像通道。
+- Fps(1,1)double，采样帧率
+- SizeX(1,1)double，图像宽度
+- SizeY(1,1)double，图像高度
+- SizeZ(1,1)double，图像深度
+- SizeC(1,1)double，图像通道数
+- SizeT(1,1)double，时间周期数
+- DimensionOrder(1,1)string，维度顺序，通常是"XYCZT"
+- OmeXml(1,1)string，OME元数据XML
+- ChannelColors(:,4)table，包含Red, Green, Blue, Alpha四列，都是(1,1)uint8，每个通道一行，对应一个图像通道的颜色。
+- Tags(1,1)struct
+
+每个字段是一个CD通道设备名，值是(:,1)double，每个元素为一帧的全像素平均值。
+#### RM文件
+RM文件的标准文件名格式是：
+```
+<鼠名>.<日期时间>.<光电参数>.<实验名>_<Trial号>.Registered.Measurements.mat
+```
+其中只有一个字段Measurements(:,:)single，第1维是时间，第2维是细胞。
+# Transcode
+本包包含数据转码函数，将CollectData收集到的数据转化为适合于DrawFigure作图的格式。
+## Atrs_TrialwiseTrace
+将Atr格式数据转码为适合于TrialwiseTrace作图的格式
+### Atr格式
+(:,:)cell，第1维对应TagCode第1列，第2维对应TagCode第2列。元胞内是(1,:)cell，第2维是细胞。元胞内是(:,:)double，第1维是Trial，第2维是时间。
+### 必需参数
+Atrs(:,1)cell，每个元胞内是一个Atr数据单元
+
+TagCodes(:,2)uint8{mustBePositive}，根据所需实验条件设置的Atr元胞索引
+
+TimeIndices(1,:)uint16{mustBePositive}，要取出的时间索引（采样帧，不是真实时间）。例如1:500可取出前500帧。
+
+### 名称-值对组参数
+TrialsFromStart(1,:)uint8{mustBePositive}=[]，从开头计算，要取出哪些Trial。例如1:5取出前5个Trial
+
+TrialsFromEnd(1,:)uint8{mustBePositive}=[]，从末尾倒数，要取出哪些Trial。例如5:-1:1取出后5个Trial，并正序排列；1:5同样取出后5个Trial，但倒序排列。
+
+### 返回值（TrialwiseTrace作图数据）
+MeanLines(:,:)double，第1维是不同的平均线，第2维是一条平均线上的不同时点数值。
+
+ErrorShadows(:,:)double，第1维对应每条平均线的误差，第2维是一条平均线不同时点的误差
 # DrawFigure
 该包负责作图，只接受最接近直接作图的处理后数据，不负责数据处理
 ## OverallHeatmap
@@ -105,25 +178,3 @@ Lines(:,1)matlab.graphics.chart.primitive.Line，平均线，plot函数返回的
 Shadows(:,1)matlab.graphics.primitive.Patch，误差阴影，fill函数返回的填充对象
 
 Stimuli(:,1)matlab.graphics.primitive.Patch，刺激范围，fill函数返回的填充对象。如果StimuRange未指定，将不返回该参数，尝试取得该返回值将导致错误。
-# Transcode
-本包包含数据转码函数，将CollectData收集到的数据转化为适合于DrawFigure作图的格式。
-## Atrs_TrialwiseTrace
-将Atr格式数据转码为适合于TrialwiseTrace作图的格式
-### Atr格式
-(:,:)cell，第1维对应TagCode第1列，第2维对应TagCode第2列。元胞内是(1,:)cell，第2维是细胞。元胞内是(:,:)double，第1维是Trial，第2维是时间。
-### 必需参数
-Atrs(:,1)cell，每个元胞内是一个Atr数据单元
-
-TagCodes(:,2)uint8{mustBePositive}，根据所需实验条件设置的Atr元胞索引
-
-TimeIndices(1,:)uint16{mustBePositive}，要取出的时间索引（采样帧，不是真实时间）。例如1:500可取出前500帧。
-
-### 名称-值对组参数
-TrialsFromStart(1,:)uint8{mustBePositive}=[]，从开头计算，要取出哪些Trial。例如1:5取出前5个Trial
-
-TrialsFromEnd(1,:)uint8{mustBePositive}=[]，从末尾倒数，要取出哪些Trial。例如5:-1:1取出后5个Trial，并正序排列；1:5同样取出后5个Trial，但倒序排列。
-
-### 返回值（TrialwiseTrace作图数据）
-MeanLines(:,:)double，第1维是不同的平均线，第2维是一条平均线上的不同时点数值。
-
-ErrorShadows(:,:)double，第1维对应每条平均线的误差，第2维是一条平均线不同时点的误差
