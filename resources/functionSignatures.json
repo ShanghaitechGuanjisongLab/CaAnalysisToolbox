@@ -334,5 +334,21 @@
 				]
 			}
 		]
+	},
+	"Transcode.SortBeforeOH":{
+		"inputs":[
+			{
+				"name":"Data",
+				"kind":"required",
+				"type":["3d","numeric"],
+				"purpose":"第1维是泳道内不同的行，第2维是泳道内不同的列，第3维是不同的泳道"
+			}
+		],
+		"outputs":[
+			{
+				"name":"Data",
+				"type":["3d","numeric"]
+			}
+		]
 	}
 }

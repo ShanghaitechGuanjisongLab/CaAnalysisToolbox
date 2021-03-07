@@ -96,6 +96,14 @@ TrialsFromEnd(1,:)uint8{mustBePositive}=[]，从末尾倒数，要取出哪些Tr
 MeanLines(:,:)double，第1维是不同的平均线，第2维是一条平均线上的不同时点数值。
 
 ErrorShadows(:,:)double，第1维对应每条平均线的误差，第2维是一条平均线不同时点的误差
+## SortBeforeOH
+在做总览热图OverallHeatmap之前对细胞进行分群排序。
+
+将每个细胞按照它在哪天平均信号最强，归入那一群，然后将每一群聚拢排序以后展开在泳道上。
+
+输入参数：Data(:,:,:)，第1维是泳道内不同的行，第2维是泳道内不同的列，第3维是不同的泳道
+
+返回值：Data(:,:,:)，维度同输入，但经过了聚类和排序。
 # DrawFigure
 该包负责作图，只接受最接近直接作图的处理后数据，不负责数据处理
 ## OverallHeatmap
