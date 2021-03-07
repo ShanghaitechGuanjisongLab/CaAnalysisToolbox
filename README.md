@@ -106,14 +106,9 @@ DrawFigure.OverallHeatmap(rand(300,300,3),"HideYAxis","ShowColorbar","ImagescSty
 [查看示例图](+DrawFigure/示例/OverallHeatmap.svg)，因为生成的是随机数据，图线位置可能不同，但样式应当一致。
 ### 位置参数
 Data(:,:,:)，必需，作图数据。第1维是不同的细胞，将作图为不同行；第2维是Trial内的时间轴，将作图到同一行；第3维是不同的天，将水平展开为不同的泳道
-### 重复参数
-Flags(1,1)string，可以设置以下旗帜：
-- HideXAxis，隐藏X轴
-- HideYAxis，隐藏Y轴
-- ShowColorbar，显示颜色棒
-### 名称-值对组参数
-Colormap(:,3)double，可选，颜色映射。如不指定，将由MATLAB自动设置。
 
+Colormap(:,3)double，可选，颜色映射。如不指定，将由MATLAB自动设置。
+### 名称-值对组参数
 ImagescStyle(1,:)cell，本函数调用imagesc绘图，此处指定要传递给imagesc的其它参数。默认行为是，如果Data有正有负，则设为{[-AbsMax,AbsMax]}，其中AbsMax=max(abs(Data),[],"all")；否则为{}。建议至少设置XData和YData参数，保证XY坐标尺度正确。
 
 SubTitles(1,:)string，每个泳道的小标题。如不指定，将不显示小标题。
@@ -121,6 +116,11 @@ SubTitles(1,:)string，每个泳道的小标题。如不指定，将不显示小
 CBLabel(1,1)string，颜色棒的标签。如不指定，将不显示标签。
 
 TLStyle(1,:)cell={'TileSpacing','none','Padding','compact'}，本函数调用tiledlayout布局泳道，此处指定要传递给tiledlayout的其它参数。
+
+Flags(1,:)string，可以设置以下旗帜：
+- HideXAxis，隐藏X轴
+- HideYAxis，隐藏Y轴
+- ShowColorbar，显示颜色棒
 ## TrialwiseTrace
 作单Trial追踪图，图上有多条相互断开的折线在X轴上排布，每条线可具有误差阴影和刺激范围
 ```MATLAB

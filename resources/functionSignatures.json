@@ -11,15 +11,8 @@
 				"purpose": "作图数据"
 			},
 			{
-				"name": "Flag",
-				"kind": "flag",
-				"type": "choices={'HideXAxis','HideYAxis','ShowColorbar'}",
-				"repeating": true,
-				"purpose": "是否隐藏坐标轴、显示颜色棒"
-			},
-			{
 				"name": "Colormap",
-				"kind": "namevalue",
+				"kind": "ordered",
 				"type": [
 					"double",
 					"size=:,3"
@@ -62,6 +55,12 @@
 				],
 				"purpose": "要传递给tiledlayout的其它参数",
 				"default": "{'TileSpacing','none','Padding','compact'}"
+			},
+			{
+				"name": "Flags",
+				"kind": "namevalue",
+				"type": ["row","string"],
+				"purpose": "设置旗帜，是否隐藏坐标轴、显示颜色棒"
 			}
 		],
 		"outputs": [
