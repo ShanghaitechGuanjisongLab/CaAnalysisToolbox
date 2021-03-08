@@ -106,6 +106,24 @@ ErrorShadows(:,:)double，第1维对应每条平均线的误差，第2维是一�
 返回值：Data(:,:,:)，维度同输入，但经过了聚类和排序。
 # DrawFigure
 该包负责作图，只接受最接近直接作图的处理后数据，不负责数据处理
+## ConsistentMultiPlot
+作一横排尺度、样式一致的多线图。
+### 位置参数
+Data(:,:,:)，必需，第1维是一块图内不同的折线，第2维是折线上不同的时间，第3维是不同的图块
+
+Xs(1,:)=1:width(Data)，可选，横轴时间点值
+### 名称-值对组参数
+Legends(:,1)string，每条线对应一个图例。默认不显示图例。
+
+LegendStyle(1,:)cell，图例的样式，作为参数传递给legend。
+
+CommonOneLegend(1,1)logical=true，是否只在最后额外添加一个图块显示一个共用的图例，否则每个图块都有自己的图例
+
+PlotStyle(:,1)cell，每个元胞对应一条线，元胞里又是一个元胞数组，规定该条线的样式，作为参数传递给plot。
+
+TLStyle(1,:)cell={'Padding','none','TileSpacing','none'}，图块布局样式，作为参数传递给tiledlayout。
+### 返回值
+Layout(1,1)matlab.graphics.layout.TiledChartLayout，使用tiledlayout生成的作图的布局。
 ## OverallHeatmap
 显示每个细胞不同天的全Trial平均Trace
 ```MATLAB
