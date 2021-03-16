@@ -1,4 +1,472 @@
 {
+	"CollectData.MetaTags_METags": {
+		"inputs": [
+			{
+				"name": "MTPaths",
+				"kind": "required",
+				"type": [
+					"vector",
+					"string"
+				],
+				"purpose": "MetaTags文件路径"
+			},
+			{
+				"name": "SizeT",
+				"kind": "required",
+				"type": "positive",
+				"purpose": "每个文件要截取的时间帧数，应当短于所有文件中的时间帧数"
+			},
+			{
+				"name": "TagThreshold",
+				"kind": "ordered",
+				"type": "positive",
+				"purpose": "将Tag值逻辑化时的阈值",
+				"default": 550
+			}
+		],
+		"outputs": [
+			{
+				"name": "Mice",
+				"type": [
+					"column",
+					"string"
+				]
+			},
+			{
+				"name": "Experiments",
+				"type": [
+					"column",
+					"string"
+				]
+			},
+			{
+				"name": "Tags",
+				"type": [
+					"2d",
+					"cell"
+				]
+			}
+		]
+	},
+	"CollectData.Rdc3_Atr": {
+		"inputs": [
+			{
+				"name": "FilePath",
+				"kind": "required",
+				"type": "file=*.mat",
+				"purpose": "Rdc2格式文件"
+			}
+		],
+		"outputs": [
+			{
+				"name": "atr",
+				"type": [
+					"2d",
+					"cell"
+				]
+			}
+		]
+	},
+	"CollectData.Rdc3s_MECgBCalcium": {
+		"inputs": [
+			{
+				"name": "Rdc3Paths",
+				"kind": "required",
+				"type": [
+					"column",
+					"string"
+				],
+				"purpose": "要读入的Rdc3文件路径"
+			},
+			{
+				"mutuallyExclusiveGroup": [
+					[
+						{
+							"name": "SelectedBlocks",
+							"kind": "required",
+							"type": [
+								"column",
+								"string"
+							],
+							"purpose": "每个元素必须是MECgBCalcium标准Block名"
+						}
+					],
+					[
+						{
+							"name": "SelectedBlocks",
+							"kind": "required",
+							"type": [
+								"size=:,2",
+								"numeric"
+							],
+							"purpose": "每一行必须是MECgBCalcium标准TagCode"
+						}
+					]
+				]
+			}
+		],
+		"outputs": [
+			{
+				"name": "Mice",
+				"type": [
+					"column",
+					"string"
+				]
+			},
+			{
+				"name": "Experiments",
+				"type": [
+					"column",
+					"string"
+				]
+			},
+			{
+				"name": "CellGroups",
+				"type": [
+					"column",
+					"string"
+				]
+			},
+			{
+				"name": "Blocks",
+				"type": [
+					"column",
+					"string"
+				]
+			},
+			{
+				"name": "Calcium",
+				"type": [
+					"size=:,:,:,:",
+					"cell"
+				]
+			}
+		]
+	},
+	"CollectData.RMs_MECgRaws": {
+		"inputs": [
+			{
+				"name": "RMPaths",
+				"kind": "required",
+				"type": [
+					"vector",
+					"string"
+				],
+				"purpose": "RM文件路径"
+			},
+			{
+				"name": "SizeT",
+				"kind": "required",
+				"type": "positive",
+				"purpose": "每个文件要截取的时间帧数，应当短于所有文件中的时间帧数"
+			}
+		],
+		"outputs": [
+			{
+				"name": "Mice",
+				"type": [
+					"column",
+					"string"
+				]
+			},
+			{
+				"name": "Experiments",
+				"type": [
+					"column",
+					"string"
+				]
+			},
+			{
+				"name": "CellGroups",
+				"type": [
+					"column",
+					"string"
+				]
+			},
+			{
+				"name": "Raws",
+				"type": [
+					"3d",
+					"cell"
+				]
+			}
+		]
+	},
+	"Transcode.Atrs_TrialwiseTrace": {
+		"inputs": [
+			{
+				"name": "Atrs",
+				"kind": "required",
+				"type": [
+					"column",
+					"cell"
+				],
+				"purpose": "每个元胞内是一个Atr数据单元"
+			},
+			{
+				"name": "TagCodes",
+				"kind": "required",
+				"type": [
+					"size=:,2",
+					"positive"
+				],
+				"purpose": "根据所需实验条件设置的Atr元胞索引"
+			},
+			{
+				"name": "TimeIndices",
+				"kind": "required",
+				"type": [
+					"row",
+					"positive"
+				],
+				"purpose": "要取出的时间索引（采样帧，不是真实时间）"
+			},
+			{
+				"name": "TrialsFromStart",
+				"kind": "namevalue",
+				"type": [
+					"row",
+					"positive"
+				],
+				"purpose": "从开头计算，要取出哪些Trial"
+			},
+			{
+				"name": "TrialsFromEnd",
+				"kind": "namevalue",
+				"type": [
+					"row",
+					"positive"
+				],
+				"purpose": "从末尾倒数，要取出哪些Trial"
+			}
+		],
+		"outputs": [
+			{
+				"name": "MeanLines",
+				"type": [
+					"2d",
+					"double"
+				]
+			},
+			{
+				"name": "ErrorShadows",
+				"type": [
+					"2d",
+					"double"
+				]
+			}
+		]
+	},
+	"Transcode.MECgSplitTrialsToExperimentsByTag": {
+		"inputs": [
+			{
+				"name": "CgRaw",
+				"kind": "required",
+				"type": [
+					"size=1,1,:",
+					"cell"
+				],
+				"purpose": "MECgRaws源数据，Mouse和Experiment维度单一，可以有多个CellGroup"
+			},
+			{
+				"name": "TagTable",
+				"kind": "required",
+				"type": "tabular",
+				"purpose": "METags元胞内的单个表格，与CgRaw的Mouse和Experiment对应"
+			},
+			{
+				"name": "ClassifyFunction",
+				"kind": "required",
+				"type": "function_handle",
+				"purpose": "分标函数句柄。接受TagTable的某一行作为输入，输出分Experiment标识用于分组"
+			}
+		],
+		"outputs": [
+			{
+				"name": "RawSplit",
+				"type": [
+					"size=:,1,:",
+					"cell"
+				]
+			},
+			{
+				"name": "TagSplit",
+				"type": [
+					"column",
+					"cell"
+				]
+			}
+		]
+	},
+	"Transcode.MECgSplitTrialsToExperimentsEqually": {
+		"inputs": [
+			{
+				"name": "CgRaw",
+				"kind": "required",
+				"type": [
+					"size=1,1,:",
+					"cell"
+				],
+				"purpose": "MECgRaws源数据，Mouse和Experiment维度单一，可以有多个CellGroup"
+			},
+			{
+				"name": "TagTable",
+				"kind": "required",
+				"type": "tabular",
+				"purpose": "METags元胞内的单个表格，与CgRaw的Mouse和Experiment对应"
+			},
+			{
+				"name": "SplitNumber",
+				"kind": "required",
+				"type": "positive",
+				"purpose": "拆分个数"
+			}
+		],
+		"outputs": [
+			{
+				"name": "RawSplit",
+				"type": [
+					"size=:,1,:",
+					"cell"
+				]
+			},
+			{
+				"name": "TagSplit",
+				"type": [
+					"column",
+					"cell"
+				]
+			}
+		]
+	},
+	"Transcode.METags_ConsistentMultiPlot":{
+		"inputs":[
+			{
+				"name":"METags",
+				"kind":"required",
+				"type":["2d","cell"],
+				"purpose":"METags格式数据"
+			},
+			{
+				"name":"FPS",
+				"kind":"required",
+				"type":"positive",
+				"purpose":"帧速率"
+			},
+			{
+				"name":"BaseLength",
+				"kind":"required",
+				"type":"positive",
+				"purpose":"Trial前基线时点数"
+			}
+		],
+		"outputs":[
+			{
+				"name":"Data",
+				"type":["3d","numeric"]
+			},
+			{
+				"name":"Xs",
+				"type":["row","numeric"]
+			},
+			{
+				"name":"Legends",
+				"type":["column","string"]
+			}
+		]
+	},
+	"Transcode.SortBeforeOH":{
+		"inputs":[
+			{
+				"name":"Data",
+				"kind":"required",
+				"type":["3d","numeric"],
+				"purpose":"第1维是泳道内不同的行，第2维是泳道内不同的列，第3维是不同的泳道"
+			}
+		],
+		"outputs":[
+			{
+				"name":"Data",
+				"type":["3d","numeric"]
+			}
+		]
+	},
+	"DrawFigure.ElasticChart": {
+		"inputs": [
+			{
+				"name": "DistanceMatrix",
+				"kind": "required",
+				"type": [
+					"square",
+					"numeric"
+				],
+				"purpose": "两两点间距离的精确值。无数据的请填入NaN"
+			},
+			{
+				"name": "PointNames",
+				"kind": "required",
+				"type": [
+					"string",
+					"vector"
+				],
+				"purpose": "每个点的名称"
+			},
+			{
+				"name": "Iteration",
+				"kind": "required",
+				"type": "positive",
+				"purpose": "迭代次数。次数越多越精细准确，但耗时越长"
+			},
+			{
+				"name": "Positions",
+				"kind": "ordered",
+				"type": [
+					"vector",
+					"complex"
+				],
+				"purpose": "每个点的初始位置，行向量，用复数表示"
+			},
+			{
+				"name": "ScatterStyle",
+				"kind": "namevalue",
+				"type": [
+					"vector",
+					"cell"
+				],
+				"purpose": "散点样式，将传递给scatter",
+				"default": "{[],'green'}"
+			},
+			{
+				"name": "TextStyle",
+				"kind": "namevalue",
+				"type": [
+					"vector",
+					"cell"
+				],
+				"purpose": "文字样式，将传递给text",
+				"default": "{'Color','red','HorizontalAlignment','center','VerticalAlignment','middle'}"
+			},
+			{
+				"name": "PlotStyle",
+				"kind": "namevalue",
+				"type": [
+					"vector",
+					"cell"
+				],
+				"purpose": "线条样式，将传递给plot",
+				"default": "{'blue'}"
+			}
+		],
+		"outputs": [
+			{
+				"name": "Positions",
+				"type": [
+					"row",
+					"complex"
+				]
+			}
+		]
+	},
 	"DrawFigure.OverallHeatmap": {
 		"inputs": [
 			{
@@ -189,328 +657,87 @@
 			}
 		]
 	},
-	"CollectData.Rdc3_Atr": {
-		"inputs": [
+	"LMHColorMap":{
+		"inputs":[
 			{
-				"name": "FilePath",
-				"kind": "required",
-				"type": "file=*.mat",
-				"purpose": "Rdc2格式文件"
+				"name":"Lowest",
+				"kind":"required",
+				"type":"size=1,3",
+				"purpose":"最小值的RGB颜色，应在[0,1]之间"
+			},
+			{
+				"name":"Middle",
+				"kind":"required",
+				"type":"size=1,3",
+				"purpose":"中间值的RGB颜色，应在[0,1]之间"
+			},
+			{
+				"name":"Highest",
+				"kind":"required",
+				"type":"size=1,3",
+				"purpose":"最大值的RGB颜色，应在[0,1]之间"
+			},
+			{
+				"name":"LowSteps",
+				"kind":"ordered",
+				"type":"positive",
+				"purpose":"低段区分色阶数",
+				"default":255
+			},
+			{
+				"name":"HighSteps",
+				"kind":"ordered",
+				"type":"positive",
+				"purpose":"高段区分色阶数",
+				"default":255
 			}
 		],
-		"outputs": [
+		"outputs":[
 			{
-				"name": "atr",
-				"type": [
-					"2d",
-					"cell"
-				]
+				"name":"Colormap",
+				"type":["size=:,3","double"]
 			}
 		]
 	},
-	"Transcode.Atrs_TrialwiseTrace": {
+	"SplitOneSingleDimensionByAnother": {
 		"inputs": [
 			{
-				"name": "Atrs",
+				"name": "Array",
 				"kind": "required",
-				"type": [
-					"column",
-					"cell"
-				],
-				"purpose": "每个元胞内是一个Atr数据单元"
+				"purpose": "多维数组"
 			},
 			{
-				"name": "TagCodes",
-				"kind": "required",
-				"type": [
-					"size=:,2",
-					"positive"
-				],
-				"purpose": "根据所需实验条件设置的Atr元胞索引"
-			},
-			{
-				"name": "TimeIndices",
-				"kind": "required",
-				"type": [
-					"row",
-					"positive"
-				],
-				"purpose": "要取出的时间索引（采样帧，不是真实时间）"
-			},
-			{
-				"name": "TrialsFromStart",
-				"kind": "namevalue",
-				"type": [
-					"row",
-					"positive"
-				],
-				"purpose": "从开头计算，要取出哪些Trial"
-			},
-			{
-				"name": "TrialsFromEnd",
-				"kind": "namevalue",
-				"type": [
-					"row",
-					"positive"
-				],
-				"purpose": "从末尾倒数，要取出哪些Trial"
-			}
-		],
-		"outputs": [
-			{
-				"name": "MeanLines",
-				"type": [
-					"2d",
-					"double"
-				]
-			},
-			{
-				"name": "ErrorShadows",
-				"type": [
-					"2d",
-					"double"
-				]
-			}
-		]
-	},
-	"CollectData.MTRMs_METRaw": {
-		"inputs": [
-			{
-				"name": "RMPaths",
-				"kind": "required",
-				"type": [
-					"column",
-					"string"
-				],
-				"purpose": "所有RM文件路径"
-			},
-			{
-				"name": "SizeT",
+				"name": "SingleDimension",
 				"kind": "required",
 				"type": "positive",
-				"purpose": "每个文件要截取的时间帧数，应当短于所有文件中的时间帧数，否则会出错"
+				"purpose": "要扩张的单一维度"
 			},
 			{
-				"name": "MTPaths",
-				"kind": "ordered",
-				"type": [
-					"column",
-					"string"
-				],
-				"purpose": "所有MT文件路径"
-			},
-			{
-				"name": "TagThreshold",
-				"kind": "namevalue",
+				"name": "GroupDimension",
+				"kind": "required",
 				"type": "positive",
-				"purpose": "将Tag值逻辑化时的阈值",
-				"default": 550
-			}
-		],
-		"outputs": [
-			{
-				"name": "Mice",
-				"type": [
-					"column",
-					"string"
-				]
+				"purpose": "要拆分的维度"
 			},
 			{
-				"name": "Experiments",
-				"type": [
-					"column",
-					"string"
-				]
-			},
-			{
-				"name": "Tags",
-				"type": [
-					"2d",
-					"cell"
-				]
-			},
-			{
-				"name": "Raws",
-				"type": [
-					"2d",
-					"cell"
-				]
-			}
-		]
-	},
-	"Transcode.SortBeforeOH": {
-		"inputs": [
-			{
-				"name": "Data",
+				"name": "GroupMarkers",
 				"kind": "required",
-				"type": [
-					"3d",
-					"numeric"
-				],
-				"purpose": "第1维是泳道内不同的行，第2维是泳道内不同的列，第3维是不同的泳道"
-			}
-		],
-		"outputs": [
+				"type": "vector",
+				"purpose": "分组标记向量，其长度必须等于Array的GroupDimension维度的长度"
+			},
 			{
-				"name": "Data",
-				"type": [
-					"3d",
-					"numeric"
-				]
-			}
-		]
-	},
-	"DrawFigure.ConsistentMultiPlot": {
-		"inputs": [
-			{
-				"name": "Data",
+				"name": "EmptyValue",
 				"kind": "required",
-				"type": [
-					"3d",
-					"numeric"
-				],
-				"purpose": "第1维是一块图内不同的折线，第2维是折线上不同的时间，第3维是不同的图块"
-			},
-			{
-				"name": "Xs",
-				"kind": "ordered",
-				"type": [
-					"row",
-					"numeric"
-				],
-				"purpose": "横轴时间点值"
-			},
-			{
-				"name": "Legends",
-				"kind": "namevalue",
-				"type": [
-					"column",
-					"string"
-				],
-				"purpose": "每条线对应一个图例"
-			},
-			{
-				"name": "LegendStyle",
-				"kind": "namevalue",
-				"type": [
-					"row",
-					"cell"
-				],
-				"purpose": "图例的样式，作为参数传递给legend"
-			},
-			{
-				"name": "CommonOneLegend",
-				"kind": "namevalue",
-				"type": [
-					"scalar",
-					"logical"
-				],
-				"purpose": "是否只在最后额外添加一个图块显示一个共用的图例，否则每个图块都有自己的图例",
-				"default": true
-			},
-			{
-				"name": "PlotStyle",
-				"kind": "namevalue",
-				"type": [
-					"column",
-					"cell"
-				],
-				"purpose": "每个元胞对应一条线，元胞里又是一个元胞数组，规定该条线的样式，作为参数传递给plot。"
-			},
-			{
-				"name": "TLStyle",
-				"kind": "namevalue",
-				"type": [
-					"row",
-					"cell"
-				],
-				"purpose": "图块布局样式，作为参数传递给tiledlayout",
-				"default": "{'Padding','none','TileSpacing','none'}"
+				"type": "scalar",
+				"purpose": "填补空位的标量值"
 			}
 		],
 		"outputs": [
 			{
-				"name": "Layout",
-				"type": [
-					"scalar",
-					"matlab.graphics.layout.TiledChartLayout"
-				]
-			}
-		]
-	},
-	"CollectData.Rdc3s_MECgBCalcium": {
-		"inputs": [
-			{
-				"name": "Rdc3Paths",
-				"kind": "required",
-				"type": [
-					"column",
-					"string"
-				],
-				"purpose": "要读入的Rdc3文件路径"
+				"name": "SplitArray"
 			},
 			{
-				"mutuallyExclusiveGroup": [
-					[
-						{
-							"name": "SelectedBlocks",
-							"kind": "required",
-							"type": [
-								"column",
-								"string"
-							],
-							"purpose": "每个元素必须是MECgBCalcium标准Block名"
-						}
-					],
-					[
-						{
-							"name": "SelectedBlocks",
-							"kind": "required",
-							"type": [
-								"size=:,2",
-								"numeric"
-							],
-							"purpose": "每一行必须是MECgBCalcium标准TagCode"
-						}
-					]
-				]
-			}
-		],
-		"outputs": [
-			{
-				"name": "Mice",
-				"type": [
-					"column",
-					"string"
-				]
-			},
-			{
-				"name": "Experiments",
-				"type": [
-					"column",
-					"string"
-				]
-			},
-			{
-				"name": "CellGroups",
-				"type": [
-					"column",
-					"string"
-				]
-			},
-			{
-				"name": "Blocks",
-				"type": [
-					"column",
-					"string"
-				]
-			},
-			{
-				"name": "Calcium",
-				"type": [
-					"size=:,:,:,:",
-					"cell"
-				]
+				"name": "UniqueMarkers",
+				"type": "column"
 			}
 		]
 	}
