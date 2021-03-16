@@ -1,9 +1,9 @@
 钙数据分析作图工具包，分为数据收集CollectData、数据转码Transcode和作图DrawFigure，3个子包。依赖[埃博拉酱的MATLAB工具包](https://github.com/Silver-Fang/EbolaChanMatlabToolbox)和[GuanLab杂项](https://github.com/ShanghaitechGuanjisongLab/Miscellany)
-# CollectData
-该包负责将数据文件读入内存，整理成便于引用计算分析的格式。
-## Rdc3_Atr
-将Rdc3格式文件收集为Atr格式内存数据
-### Rdc3格式
+# 数据格式规范
+本节描述了多个函数中用到的数据格式规范。
+## Rdc3格式
+本格式存储了一天内一只鼠一个细胞群体多个不同刺激Block的钙和标数据，包含处理前全长连续数据和经过ΔF/F₀处理、分Trial的数据。
+
 fps(1,1)double，采样率
 
 raw_tag(1,:,:)double，原始标。第2维是时间，第3维是Block
@@ -14,66 +14,47 @@ nrd_c(:,:)cell，拆分、标准化后的数据。第1维是Block，第2维是�
 
 Name(:,1)cell，每个Block的名称。元胞内是(1,:)char。
 
-TagCode(:,2)double，每个Block的编码，与Name对应
+TagCode(:,2)double，每个Block的编码，与Name对应。对应关系见[翻译表](+CollectData/TranslateTable.mat)
 
 raw_data(:,:,:)double，原始数据。第1维是时间，第2维是细胞，第3维是Block
+## MECgRawsTags格式
+本格式存储了多天、多只鼠、多个不同实验、多个Trial、多个细胞群体的分Trial的细胞测量数据。以下字段在某些函数中并不全都需要。
+
+Mice(:,1)string，参与实验的鼠名
+
+Experiments(:,1)string，实验名
+
+CellGroups(:,1)string，细胞群体名
+
+MECgRaws(:,:,:)cell，钙信号测量值。第1维是不同实验，第2维是不同鼠，第3维是不同细胞类群。元胞里是(:,:,:)single，第1维是细胞，第2维是时间，第3维是Trial。
+
+METags(:,:)cell，标通道逻辑值，表明某一时刻是否有标。第1维是不同实验，第2维是不同鼠。元胞内是(:,:)table，第1维是Trial，第2维是标通道。表格内是(:,1)logical，第1维是时间，通过一定阈值得到此刻是否有标的逻辑值。
+# CollectData
+该包负责将数据文件读入内存，整理成便于引用计算分析的格式。
+## Rdc3_Atr
+将[Rdc3格式](#Rdc3格式)文件收集为Atr格式内存数据
 ### Atr格式
 (:,:)cell，第1维对应TagCode第1列，第2维对应TagCode第2列。元胞内是(1,:)cell，第2维是细胞。元胞内是(:,:)double，第1维是Trial，第2维是时间。
 ### 输入参数
 FilePath(1,1)string，Rdc2格式文件
 ### 返回值
 atr(:,:)cell，Atr格式内存数据
-## MTRMs_METRaw
-将多个MTRM文件存储格式读入为METRaw内存格式
+## Rdc3s_MECgBCalcium
+将一系列[Rdc3格式](#Rdc3格式)文件读入为MECgBCalcium内存格式
 ### 输入参数
-RMPaths(:,1)string，必需，RM文件路径
+Rdc3Paths(:,1)string，要读入的Rdc3文件路径
 
-SizeT(1,1)uint16，必需，每个文件要截取的时间帧数，应当短于所有文件中的时间帧数，否则会出错。
+SelectedBlocks，如果是(:,1)string，每个元素必须是MECgBCalcium标准Block名；如果是(:,2)，每一行必须是MECgBCalcium标准TagCode。每个标准Block名对应一个TagCode(1,2)，TagCode作为行列坐标，对应块名记录在TranslateTable中。
+### 返回值（MECgBCalcium格式）
+Mice(:,1)string，鼠名
 
-MTPaths(:,1)string，可选，MT文件路径。如果不指定，将根据MTRM文件命名规范自动查找MT文件。如果找不到，则对应位置的Tags元胞将为空。
+Experiments(:,1)string，实验名
 
-TagThreshold(1,1)uint16=550，名称-值对组参数，将Tag值逻辑化时的阈值
-### 返回值（METRaw）
-Mice(:,1)string，小鼠名称
+CellGroups(:,1)string，细胞群名
 
-Experiments(1,:)string，实验名称
+Blocks(:,1)string，标准Block名。
 
-Tags(:,:)cell，第1维是不同鼠，第2维是不同实验。元胞里是结构体标量，每个字段是电流检测设备名称，值是逻辑化的标：
-- CD1(:,1)logical
-- CD2(:,1)logical
-- ……
-
-Raws(:,:)cell，第1维是不同鼠，第2维是不同实验。元胞里是(:,:,:)single，第1维是时间，第2维是细胞，第3维是Trial
-### MTRM文件存储格式
-MTRM格式将每个Trial的钙数据存储在单独的文件中，且未经ΔF/F₀处理。直接存储。一个Trial存储单元还分为两个文件，称为MT文件和RM文件。其中MT文件存储元数据和Tag，RM文件存储钙测量值。
-#### MT文件
-MT文件的标准文件名格式是：
-```
-<鼠名>.<日期时间>.<光电参数>.<实验名>_<Trial号>.MetaTags.mat
-```
-包含两个字段：
-
-MetaData(1,1)struct
-- ScannerType(1,1)string，扫描器类型，可以是"Resonant"或"Galvano"
-- DeviceNames(:,1)string，采集设备名，如"RNDD4G"、"CD1"等。每行对应一个图像通道。
-- Fps(1,1)double，采样帧率
-- SizeX(1,1)double，图像宽度
-- SizeY(1,1)double，图像高度
-- SizeZ(1,1)double，图像深度
-- SizeC(1,1)double，图像通道数
-- SizeT(1,1)double，时间周期数
-- DimensionOrder(1,1)string，维度顺序，通常是"XYCZT"
-- OmeXml(1,1)string，OME元数据XML
-- ChannelColors(:,4)table，包含Red, Green, Blue, Alpha四列，都是(1,1)uint8，每个通道一行，对应一个图像通道的颜色。
-- Tags(1,1)struct
-
-每个字段是一个CD通道设备名，值是(:,1)double，每个元素为一帧的全像素平均值。
-#### RM文件
-RM文件的标准文件名格式是：
-```
-<鼠名>.<日期时间>.<光电参数>.<实验名>_<Trial号>.Registered.Measurements.mat
-```
-其中只有一个字段Measurements(:,:)single，第1维是时间，第2维是细胞。
+Calcium(:,:,:,:)cell，ΔF/F₀处理后的钙信号测量值。第1维Block，第2维细胞群，第3维实验，第4维小鼠。元胞内(:,:,:)double，第1维Trial，第2维时间，第3维细胞。
 # Transcode
 本包包含数据转码函数，将CollectData收集到的数据转化为适合于DrawFigure作图的格式。
 ## Atrs_TrialwiseTrace
@@ -129,7 +110,9 @@ Layout(1,1)matlab.graphics.layout.TiledChartLayout，使用tiledlayout生成的�
 ```MATLAB
 DrawFigure.OverallHeatmap(rand(300,300,3),"HideYAxis","ShowColorbar","ImagescStyle",{"XData",[0 3]},"SubTitles",["1" "2" "3"],"CBLabel","我是颜色棒");
 ```
-[查看示例图](+DrawFigure/示例/OverallHeatmap.svg)，因为生成的是随机数据，图线位置可能不同，但样式应当一致。
+![](+DrawFigure/示例/OverallHeatmap.svg)
+
+因为生成的是随机数据，图线位置可能不同，但样式应当一致。
 ### 位置参数
 Data(:,:,:)，必需，作图数据。第1维是不同的细胞，将作图为不同行；第2维是Trial内的时间轴，将作图到同一行；第3维是不同的天，将水平展开为不同的泳道
 
@@ -177,7 +160,9 @@ YLimit=[0 2];
 XSpacing=0.2;
 [Lines,Shadows,Stimuli]=DrawFigure.TrialwiseTrace(Mean,Error,XSpacing,"StimuRange",StimuRange,"ShadowStyle",FillStyle,"LineStyle",PlotStyle,"Xs",Xs,"YLimit",YLimit);
 ```
-[查看示例图](+DrawFigure/示例/TrialwiseTrace.svg)，因为生成的是随机数据，图线位置可能不同，但样式应当一致。
+![](+DrawFigure/示例/TrialwiseTrace.svg)
+
+因为生成的是随机数据，图线位置可能不同，但样式应当一致。
 ### 必需参数
 MeanLines(:,:)，每一行是一条平均线上的不同时点数值，不同行是不同的平均线
 
