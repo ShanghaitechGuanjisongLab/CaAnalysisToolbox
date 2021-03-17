@@ -339,42 +339,6 @@
 			}
 		]
 	},
-	"Transcode.METags_ConsistentMultiPlot":{
-		"inputs":[
-			{
-				"name":"METags",
-				"kind":"required",
-				"type":["2d","cell"],
-				"purpose":"METags格式数据"
-			},
-			{
-				"name":"FPS",
-				"kind":"required",
-				"type":"positive",
-				"purpose":"帧速率"
-			},
-			{
-				"name":"BaseLength",
-				"kind":"required",
-				"type":"positive",
-				"purpose":"Trial前基线时点数"
-			}
-		],
-		"outputs":[
-			{
-				"name":"Data",
-				"type":["3d","numeric"]
-			},
-			{
-				"name":"Xs",
-				"type":["row","numeric"]
-			},
-			{
-				"name":"Legends",
-				"type":["column","string"]
-			}
-		]
-	},
 	"Transcode.SortBeforeOH":{
 		"inputs":[
 			{

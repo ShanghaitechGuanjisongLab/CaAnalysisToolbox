@@ -16,11 +16,9 @@
 - [MEBCalcium_ElasticChart](#MEBCalcium_ElasticChart)
 - [MECgSplitTrialsToExperimentsByTag](#MECgSplitTrialsToExperimentsByTag)
 - [MECgSplitTrialsToExperimentsEqually](#MECgSplitTrialsToExperimentsEqually)
-- [METags_ConsistentMultiPlot](#METags_ConsistentMultiPlot)
 - [SortBeforeOH](#SortBeforeOH)
 
 [DrawFigure](#DrawFigure)
-- [ConsistentMultiPlot](#ConsistentMultiPlot)
 - [ElasticChart](#ElasticChart)
 - [OverallHeatmap](#OverallHeatmap)
 - [TrialwiseTrace](#TrialwiseTrace)
@@ -69,7 +67,7 @@ CellGroups(:,1)string，细胞群体名
 
 Blocks(:,1)string，模块名
 
-MECgBCacium(:,:,:,:)cell，钙信号测量值。第1维是模块，第2维是细胞群，第3维是实验，第4维是鼠。元胞内是(:,:,:)double，第1维是细胞，第2维是时间，第3维是Trial。
+MECgBCacium(:,:,:,:)cell，钙信号测量值。第1维是模块，第2维是细胞群，第3维是实验，第4维是鼠。元胞内是(:,:,:)double，第1维是Trial，第2维是时间，第3维是细胞。
 # CollectData
 该包负责将数据文件读入内存，整理成便于引用计算分析的格式。
 ## MetaTags_METags
@@ -197,16 +195,6 @@ SplitNumber(1,1)uint8，拆分个数
 RawSplit(:,1,:)cell，Experiment维度拆分后的源数据
 
 TagSplit(:,1)cell，Experiment维度拆分后的标数据
-## METags_ConsistentMultiPlot
-将METags格式数据准备为适合[ConsistentMultiPlot](#ConsistentMultiPlot)的格式
-### 输入参数
-METags(:,:)cell，[METags格式数据](#MECgRawsTags格式)
-
-FPS(1,1)uint8，帧速率
-
-BaseLength(1,1)uint8，Trial前基线时点数
-### 返回值
-ConsistentMultiPlot所需的Data Xs Legends参数
 ## SortBeforeOH
 在做总览热图OverallHeatmap之前对细胞进行分群排序。
 
@@ -217,24 +205,6 @@ ConsistentMultiPlot所需的Data Xs Legends参数
 返回值：Data(:,:,:)，维度同输入，但经过了聚类和排序。
 # DrawFigure
 该包负责作图，只接受最接近直接作图的处理后数据，不负责数据处理
-## ConsistentMultiPlot
-作一横排尺度、样式一致的多线图。
-### 位置参数
-Data(:,:,:)，必需，第1维是一块图内不同的折线，第2维是折线上不同的时间，第3维是不同的图块
-
-Xs(1,:)=1:width(Data)，可选，横轴时间点值
-### 名称-值对组参数
-Legends(:,1)string，每条线对应一个图例。默认不显示图例。
-
-LegendStyle(1,:)cell，图例的样式，作为参数传递给legend。
-
-CommonOneLegend(1,1)logical=true，是否只在最后额外添加一个图块显示一个共用的图例，否则每个图块都有自己的图例
-
-PlotStyle(:,1)cell，每个元胞对应一条线，元胞里又是一个元胞数组，规定该条线的样式，作为参数传递给plot。
-
-TLStyle(1,:)cell={'Padding','none','TileSpacing','none'}，图块布局样式，作为参数传递给tiledlayout。
-### 返回值
-Layout(1,1)matlab.graphics.layout.TiledChartLayout，使用tiledlayout生成的作图的布局。
 ## ElasticChart
 弹簧图，反映点之间的距离关系。
 
