@@ -339,19 +339,25 @@
 			}
 		]
 	},
-	"Transcode.SortBeforeOH":{
-		"inputs":[
+	"Transcode.SortBeforeOH": {
+		"inputs": [
 			{
-				"name":"Data",
-				"kind":"required",
-				"type":["3d","numeric"],
-				"purpose":"第1维是泳道内不同的行，第2维是泳道内不同的列，第3维是不同的泳道"
+				"name": "Data",
+				"kind": "required",
+				"type": [
+					"3d",
+					"numeric"
+				],
+				"purpose": "第1维是泳道内不同的行，第2维是泳道内不同的列，第3维是不同的泳道"
 			}
 		],
-		"outputs":[
+		"outputs": [
 			{
-				"name":"Data",
-				"type":["3d","numeric"]
+				"name": "Data",
+				"type": [
+					"3d",
+					"numeric"
+				]
 			}
 		]
 	},
@@ -443,6 +449,13 @@
 				"purpose": "作图数据"
 			},
 			{
+				"name": "Flags",
+				"kind": "ordered",
+				"type": "choices={'HideXAxis','HideYAxis','ShowColorBar'}",
+				"repeating": true,
+				"purpose": "重复设置功能旗帜"
+			},
+			{
 				"name": "Colormap",
 				"kind": "ordered",
 				"type": [
@@ -487,15 +500,6 @@
 				],
 				"purpose": "要传递给tiledlayout的其它参数",
 				"default": "{'TileSpacing','none','Padding','compact'}"
-			},
-			{
-				"name": "Flags",
-				"kind": "namevalue",
-				"type": [
-					"row",
-					"string"
-				],
-				"purpose": "设置旗帜，是否隐藏坐标轴、显示颜色棒"
 			}
 		],
 		"outputs": [
@@ -504,6 +508,13 @@
 				"type": [
 					"scalar",
 					"matlab.graphics.layout.TiledChartLayout"
+				]
+			},
+			{
+				"name": "ColorBar",
+				"type": [
+					"scalar",
+					"matlab.graphics.illustration.ColorBar"
 				]
 			}
 		]
@@ -621,45 +632,48 @@
 			}
 		]
 	},
-	"LMHColorMap":{
-		"inputs":[
+	"LMHColorMap": {
+		"inputs": [
 			{
-				"name":"Lowest",
-				"kind":"required",
-				"type":"size=1,3",
-				"purpose":"最小值的RGB颜色，应在[0,1]之间"
+				"name": "Lowest",
+				"kind": "required",
+				"type": "size=1,3",
+				"purpose": "最小值的RGB颜色，应在[0,1]之间"
 			},
 			{
-				"name":"Middle",
-				"kind":"required",
-				"type":"size=1,3",
-				"purpose":"中间值的RGB颜色，应在[0,1]之间"
+				"name": "Middle",
+				"kind": "required",
+				"type": "size=1,3",
+				"purpose": "中间值的RGB颜色，应在[0,1]之间"
 			},
 			{
-				"name":"Highest",
-				"kind":"required",
-				"type":"size=1,3",
-				"purpose":"最大值的RGB颜色，应在[0,1]之间"
+				"name": "Highest",
+				"kind": "required",
+				"type": "size=1,3",
+				"purpose": "最大值的RGB颜色，应在[0,1]之间"
 			},
 			{
-				"name":"LowSteps",
-				"kind":"ordered",
-				"type":"positive",
-				"purpose":"低段区分色阶数",
-				"default":255
+				"name": "LowSteps",
+				"kind": "ordered",
+				"type": "positive",
+				"purpose": "低段区分色阶数",
+				"default": 255
 			},
 			{
-				"name":"HighSteps",
-				"kind":"ordered",
-				"type":"positive",
-				"purpose":"高段区分色阶数",
-				"default":255
+				"name": "HighSteps",
+				"kind": "ordered",
+				"type": "positive",
+				"purpose": "高段区分色阶数",
+				"default": 255
 			}
 		],
-		"outputs":[
+		"outputs": [
 			{
-				"name":"Colormap",
-				"type":["size=:,3","double"]
+				"name": "Colormap",
+				"type": [
+					"size=:,3",
+					"double"
+				]
 			}
 		]
 	},
