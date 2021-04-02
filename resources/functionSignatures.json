@@ -257,6 +257,35 @@
 			}
 		]
 	},
+	"Transcode.MECgRaws_OverallHeatmap":{
+		"inputs":[
+			{
+				"name":"MECgRaws",
+				"kind":"required",
+				"type":["3d","cell"],
+				"purpose":"MECgRaws格式数据，详见自述文档"
+			},
+			{
+				"name":"BaseLength",
+				"kind":"required",
+				"type":"positive",
+				"purpose":"刺激前基线时间点数"
+			},
+			{
+				"name":"Flags",
+				"kind":"flag",
+				"type":"choices={'DoLog','PickMedian'}",
+				"repeating":true,
+				"purpose":"树立旗帜，是否启用特殊功能"
+			}
+		],
+		"outputs":[
+			{
+				"name":"OHData",
+				"type":["3d","double"]
+			}
+		]
+	},
 	"Transcode.MECgSplitTrialsToExperimentsByTag": {
 		"inputs": [
 			{

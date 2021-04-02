@@ -14,6 +14,7 @@
 [Transcode](#Transcode)
 - [Atrs_TrialwiseTrace](#Atrs_TrialwiseTrace)
 - [MEBCalcium_ElasticChart](#MEBCalcium_ElasticChart)
+- [MECgRaws_OverallHeatmap](#MECgRaws_OverallHeatmap)
 - [MECgSplitTrialsToExperimentsByTag](#MECgSplitTrialsToExperimentsByTag)
 - [MECgSplitTrialsToExperimentsEqually](#MECgSplitTrialsToExperimentsEqually)
 - [SortBeforeOH](#SortBeforeOH)
@@ -167,6 +168,18 @@ ErrorShadows(:,:)double，第1维对应每条平均线的误差，第2维是一�
 输入参数：MECgBCalcium格式中的MECgBCalcium Experiments Blocks字段。其中MECgBCalcium第2维必须单一，即只能有一个细胞群。
 
 返回值：ElasticChart需要的DistanceMatrix和PointNames参数。
+## MECgRaws_OverallHeatmap
+准备MECgRaws格式数据，使其适合于DrawFigure.OverallHeatmap
+### 必需参数
+MECgRaws(:,:,:)cell，MECgRaws格式数据，详见自述文档
+
+BaseLength(1,1)uint16，刺激前基线时间点数
+### 重复参数
+Flags(1,1)string，树立旗帜，是否启用以下特殊功能：
+- DoLog，计算统计量之前先取对数
+- PickMedian，不计算平均值，而是计算中位数
+### 返回值
+OHData(:,:,:)double，交付给DrawFigure.OverallHeatmap的数据
 ## MECgSplitTrialsToExperimentsByTag
 按照指定的分类函数将MECgRaws的Trial分METags拆分到不同的实验
 
