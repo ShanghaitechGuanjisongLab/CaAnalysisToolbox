@@ -7,6 +7,7 @@
 
 [CollectData](#CollectData)
 - [MetaTags_METags](#MetaTags_METags)
+- [MTRM_Rdc3](#MTRM_Rdc3)
 - [Rdc3_Atr](#Rdc3_Atr)
 - [Rdc3s_MECgBCalcium](#Rdc3s_MECgBCalcium)
 - [RMs_MECgRaws](#RMs_MECgRaws)
@@ -102,6 +103,38 @@ MetaData(1,1)struct
 - ChannelColors(:,4)table，包含Red, Green, Blue, Alpha四列，都是(1,1)uint8，每个通道一行，对应一个图像通道的颜色。
 
 Tags(1,1)struct，每个字段是一个CD通道设备名，值是(:,1)double，每个元素为一帧的全像素平均值。
+## MTRM_Rdc3
+将MECgRawsTags标准格式文件读入为Rdc3格式文件的某些字段
+```MATLAB
+%打开文件对话框选择文件MTRM文件，转换成Rdc3字段
+[Filename,fps,Name,nrd_c,raw_data,raw_tag] = CollectData.MTRM_Rdc3
+%分标阈值设为600，直接指定文件路径
+MTPaths=OpenFileDialog(Filter="MetaTags文件|*.MetaTags.mat",Title="选择MetaTags文件",Multiselect=true);
+RMPaths=OpenFileDialog(Filter="Measurements文件|*.Measurements.mat",Title="选择Measurements文件",Multiselect=true);
+[Filename,fps,Name,nrd_c,raw_data,raw_tag] = CollectData.MTRM_Rdc3(600,MTPaths=MTPaths,RMPaths=RMPaths);
+```
+### 可选位置参数
+TagThreshold(1,1)uint16=550，分标阈值
+### 名称-值对组参数
+#### MTPaths(:,1)string
+MetaTags文件路径（\*.MetaTags.mat）。默认打开一个文件选择对话框来取得该参数。
+
+MetaTags文件的标准文件名格式是：
+```
+<鼠名>.<日期时间>.<实验名>.<光电参数>.[_<Trial号>].MetaTags.mat
+```
+#### RMPaths(:,1)string
+Measurements文件路径（*.Measurements.mat）。默认打开一个文件选择对话框来取得该参数。
+
+Measurements文件的标准文件名格式是：
+```
+<鼠名>.<日期时间>.<实验名>.<光电参数>._<Trial号>.Registered.<细胞类群>.Measurements.mat
+```
+对于本函数的一次调用，只能输入具有相同鼠名、实验名和细胞类群的文件。如果有多个不同，请分多次调用本函数。
+### 返回值
+Filename(1,1)string，自动生成的rdc3文件名
+
+还返回Rdc3文件格式的fps Name nrd_c raw_data raw_tag字段，详见[Rdc3格式](#Rdc3格式)。
 ## Rdc3_Atr
 将[Rdc3格式](#Rdc3格式)文件收集为Atr格式内存数据
 ### Atr格式

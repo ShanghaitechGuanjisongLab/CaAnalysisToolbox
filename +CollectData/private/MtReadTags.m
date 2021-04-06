@@ -1,4 +1,3 @@
-function [TagName,TagValue] = MtReadTags(MtPath,SizeT,TagThreshold)
+function TagValue = MtReadTags(MtPath)
 TagStruct=load(MtPath).Tags;
-TagName=string(fieldnames(TagStruct)');
-TagValue=arrayfun(@(Name)TagStruct.(Name)(1:SizeT)>TagThreshold,TagName,"UniformOutput",false);
+TagValue=DimensionFun(@(Name)TagStruct.(Name)',string(fieldnames(TagStruct)),CatMode="Linear");

@@ -48,6 +48,56 @@
 			}
 		]
 	},
+	"CollectData.MTRM_Rdc3":{
+		"inputs":[
+			{
+				"name":"TagThreshold",
+				"kind":"ordered",
+				"type":"positive",
+				"purpose":"分标阈值",
+				"default":550
+			},
+			{
+				"name":"MTPaths",
+				"kind":"namevalue",
+				"type":["vector","string"],
+				"purpose":"MetaTags文件路径（*.MetaTags.mat）。默认打开一个文件选择对话框来取得该参数。"
+			},
+			{
+				"name":"RMPaths",
+				"kind":"namevalue",
+				"type":["vector","string"],
+				"purpose":"Measurements文件路径（*.Measurements.mat）。默认打开一个文件选择对话框来取得该参数。"
+			}
+		],
+		"outputs":[
+			{
+				"name":"Filename",
+				"type":["string","scalar"]
+			},
+			{
+				"name":"fps",
+				"type":"positive"
+			},
+			{
+				"name":"Name",
+				"type":["column","string"]
+			},
+			{
+				"name":"nrd_c",
+				"type":["2d","cell"]
+			},
+			{
+				"name":"raw_data",
+				"type":["3d","single"]
+			},
+			{
+				"name":"raw_tag",
+				"type":["3d","double"]
+			}
+		],
+		"platforms":"win64"
+	},
 	"CollectData.Rdc3_Atr": {
 		"inputs": [
 			{
