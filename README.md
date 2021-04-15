@@ -146,9 +146,9 @@ atr(:,:)cell，Atr格式内存数据
 ## Rdc3s_MECgBCalcium
 将一系列[Rdc3格式](#Rdc3格式)文件读入为MECgBCalcium内存格式
 ### 输入参数
-Rdc3Paths(:,1)string，要读入的Rdc3文件路径
+SelectedBlocks，必需。如果是(:,1)string，每个元素必须是MECgBCalcium标准Block名；如果是(:,2)，每一行必须是MECgBCalcium标准TagCode。每个标准Block名对应一个TagCode(1,2)，TagCode作为行列坐标，对应块名记录在TranslateTable中。
 
-SelectedBlocks，如果是(:,1)string，每个元素必须是MECgBCalcium标准Block名；如果是(:,2)，每一行必须是MECgBCalcium标准TagCode。每个标准Block名对应一个TagCode(1,2)，TagCode作为行列坐标，对应块名记录在TranslateTable中。
+Rdc3Paths(:,1)string，可选。要读入的Rdc3文件路径。默认打开文件对话框要求用户手动选择。
 ### 返回值（MECgBCalcium格式）
 Mice(:,1)string，鼠名
 

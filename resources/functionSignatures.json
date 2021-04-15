@@ -120,15 +120,6 @@
 	"CollectData.Rdc3s_MECgBCalcium": {
 		"inputs": [
 			{
-				"name": "Rdc3Paths",
-				"kind": "required",
-				"type": [
-					"column",
-					"string"
-				],
-				"purpose": "要读入的Rdc3文件路径"
-			},
-			{
 				"mutuallyExclusiveGroup": [
 					[
 						{
@@ -153,6 +144,15 @@
 						}
 					]
 				]
+			},			
+			{
+				"name": "Rdc3Paths",
+				"kind": "ordered",
+				"type": [
+					"column",
+					"string"
+				],
+				"purpose": "要读入的Rdc3文件路径"
 			}
 		],
 		"outputs": [
