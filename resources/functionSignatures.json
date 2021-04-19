@@ -3,7 +3,7 @@
 		"inputs": [
 			{
 				"name": "MTPaths",
-				"kind": "required",
+				"kind": "ordered",
 				"type": [
 					"vector",
 					"string"
@@ -12,13 +12,14 @@
 			},
 			{
 				"name": "SizeT",
-				"kind": "required",
+				"kind": "namevalue",
 				"type": "positive",
-				"purpose": "每个文件要截取的时间帧数，应当短于所有文件中的时间帧数"
+				"purpose": "每个文件要截取的时间帧数，应当短于所有文件中的时间帧数。65535取所有帧",
+				"default": 65535
 			},
 			{
 				"name": "TagThreshold",
-				"kind": "ordered",
+				"kind": "namevalue",
 				"type": "positive",
 				"purpose": "将Tag值逻辑化时的阈值",
 				"default": 550
@@ -48,55 +49,76 @@
 			}
 		]
 	},
-	"CollectData.MTRM_Rdc3":{
-		"inputs":[
+	"CollectData.MTRM_Rdc3": {
+		"inputs": [
 			{
-				"name":"TagThreshold",
-				"kind":"ordered",
-				"type":"positive",
-				"purpose":"分标阈值",
-				"default":550
+				"name": "TagThreshold",
+				"kind": "ordered",
+				"type": "positive",
+				"purpose": "分标阈值",
+				"default": 550
 			},
 			{
-				"name":"MTPaths",
-				"kind":"namevalue",
-				"type":["vector","string"],
-				"purpose":"MetaTags文件路径（*.MetaTags.mat）。默认打开一个文件选择对话框来取得该参数。"
+				"name": "MTPaths",
+				"kind": "namevalue",
+				"type": [
+					"vector",
+					"string"
+				],
+				"purpose": "MetaTags文件路径（*.MetaTags.mat）。默认打开一个文件选择对话框来取得该参数。"
 			},
 			{
-				"name":"RMPaths",
-				"kind":"namevalue",
-				"type":["vector","string"],
-				"purpose":"Measurements文件路径（*.Measurements.mat）。默认打开一个文件选择对话框来取得该参数。"
+				"name": "RMPaths",
+				"kind": "namevalue",
+				"type": [
+					"vector",
+					"string"
+				],
+				"purpose": "Measurements文件路径（*.Measurements.mat）。默认打开一个文件选择对话框来取得该参数。"
 			}
 		],
-		"outputs":[
+		"outputs": [
 			{
-				"name":"Filename",
-				"type":["string","scalar"]
+				"name": "Filename",
+				"type": [
+					"string",
+					"scalar"
+				]
 			},
 			{
-				"name":"fps",
-				"type":"positive"
+				"name": "fps",
+				"type": "positive"
 			},
 			{
-				"name":"Name",
-				"type":["column","string"]
+				"name": "Name",
+				"type": [
+					"column",
+					"string"
+				]
 			},
 			{
-				"name":"nrd_c",
-				"type":["2d","cell"]
+				"name": "nrd_c",
+				"type": [
+					"2d",
+					"cell"
+				]
 			},
 			{
-				"name":"raw_data",
-				"type":["3d","single"]
+				"name": "raw_data",
+				"type": [
+					"3d",
+					"single"
+				]
 			},
 			{
-				"name":"raw_tag",
-				"type":["3d","double"]
+				"name": "raw_tag",
+				"type": [
+					"3d",
+					"double"
+				]
 			}
 		],
-		"platforms":"win64"
+		"platforms": "win64"
 	},
 	"CollectData.Rdc3_Atr": {
 		"inputs": [
@@ -144,7 +166,7 @@
 						}
 					]
 				]
-			},			
+			},
 			{
 				"name": "Rdc3Paths",
 				"kind": "ordered",
@@ -197,7 +219,7 @@
 		"inputs": [
 			{
 				"name": "RMPaths",
-				"kind": "required",
+				"kind": "ordered",
 				"type": [
 					"vector",
 					"string"
@@ -206,9 +228,10 @@
 			},
 			{
 				"name": "SizeT",
-				"kind": "required",
+				"kind": "namevalue",
 				"type": "positive",
-				"purpose": "每个文件要截取的时间帧数，应当短于所有文件中的时间帧数"
+				"purpose": "每个文件要截取的时间帧数，应当短于所有文件中的时间帧数。65535取所有时间帧",
+				"default": 65535
 			}
 		],
 		"outputs": [
@@ -307,32 +330,38 @@
 			}
 		]
 	},
-	"Transcode.MECgRaws_OverallHeatmap":{
-		"inputs":[
+	"Transcode.MECgRaws_OverallHeatmap": {
+		"inputs": [
 			{
-				"name":"MECgRaws",
-				"kind":"required",
-				"type":["3d","cell"],
-				"purpose":"MECgRaws格式数据，详见自述文档"
+				"name": "MECgRaws",
+				"kind": "required",
+				"type": [
+					"3d",
+					"cell"
+				],
+				"purpose": "MECgRaws格式数据，详见自述文档"
 			},
 			{
-				"name":"BaseLength",
-				"kind":"required",
-				"type":"positive",
-				"purpose":"刺激前基线时间点数"
+				"name": "BaseLength",
+				"kind": "required",
+				"type": "positive",
+				"purpose": "刺激前基线时间点数"
 			},
 			{
-				"name":"Flags",
-				"kind":"flag",
-				"type":"choices={'DoLog','PickMedian'}",
-				"repeating":true,
-				"purpose":"树立旗帜，是否启用特殊功能"
+				"name": "Flags",
+				"kind": "flag",
+				"type": "choices={'DoLog','PickMedian'}",
+				"repeating": true,
+				"purpose": "树立旗帜，是否启用特殊功能"
 			}
 		],
-		"outputs":[
+		"outputs": [
 			{
-				"name":"OHData",
-				"type":["3d","double"]
+				"name": "OHData",
+				"type": [
+					"3d",
+					"double"
+				]
 			}
 		]
 	},

@@ -75,11 +75,11 @@ MECgBCacium(:,:,:,:)cell，钙信号测量值。第1维是模块，第2维是细
 ## MetaTags_METags
 将多个MetaTags文件读入为METags内存格式
 ### 输入参数
-MTPaths(:,1)string，必需，MetaTags文件路径。
+MTPaths(:,1)string，可选，MetaTags文件路径。默认打开文件对话框要求用户手动选择。
 
-SizeT(1,1)uint16，必需，每个文件要截取的时间帧数，应当短于所有文件中的时间帧数，否则会出错。
+SizeT(1,1)uint16=65535，名称-值，每个文件要截取的时间帧数，应当短于所有文件中的时间帧数，否则会出错。如果设为65535，则取所有时间帧。
 
-TagThreshold(1,1)uint16=550，可选，将Tag值逻辑化时的阈值
+TagThreshold(1,1)uint16=550，名称-值，将Tag值逻辑化时的阈值
 ### 返回值
 返回[MECgRawsTags格式](#MECgRawsTags格式)规范中的Mice Experiments METags三个字段。
 ### MetaTags文件格式
@@ -162,9 +162,9 @@ Calcium(:,:,:,:)cell，ΔF/F₀处理后的钙信号测量值。第1维Block，�
 ## RMs_MECgRaws
 将多个RM文件读入为MECgRaws内存格式
 ### 输入参数
-RMPaths(:,1)string，RM文件路径
+RMPaths(:,1)string，可选，RM文件路径。默认打开文件对话框要求用户手动选择。
 
-SizeT(1,1)uint16，每个文件要截取的时间帧数，应当短于所有文件中的时间帧数，否则会出错。
+SizeT(1,1)uint16=65535，名称-值参数，每个文件要截取的时间帧数，应当短于所有文件中的时间帧数，否则会出错。如果设为65535，将取所有时间帧。
 ### 返回值
 返回[MECgRawsTags格式](#MECgRawsTags格式)标准中的Mice Experiments CellGroups MECgRaws四个字段。
 ### RM文件格式
