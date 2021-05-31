@@ -120,6 +120,82 @@
 		],
 		"platforms": "win64"
 	},
+	"CollectData.Rdc2_MECgBCalcium": {
+		"inputs": [
+			{
+				"mutuallyExclusiveGroup": [
+					[
+						{
+							"name": "SelectedBlocks",
+							"kind": "required",
+							"type": [
+								"column",
+								"string"
+							],
+							"purpose": "每个元素必须是MECgBCalcium标准Block名"
+						}
+					],
+					[
+						{
+							"name": "SelectedBlocks",
+							"kind": "required",
+							"type": [
+								"size=:,2",
+								"numeric"
+							],
+							"purpose": "每一行必须是MECgBCalcium标准TagCode"
+						}
+					]
+				]
+			},
+			{
+				"name": "Rdc2Paths",
+				"kind": "ordered",
+				"type": [
+					"column",
+					"string"
+				],
+				"purpose": "要读入的Rdc2文件路径"
+			}
+		],
+		"outputs": [
+			{
+				"name": "Calcium",
+				"type": [
+					"size=:,:,:,:",
+					"cell"
+				]
+			},
+			{
+				"name": "Mice",
+				"type": [
+					"column",
+					"string"
+				]
+			},
+			{
+				"name": "Experiments",
+				"type": [
+					"column",
+					"string"
+				]
+			},
+			{
+				"name": "CellGroups",
+				"type": [
+					"column",
+					"string"
+				]
+			},
+			{
+				"name": "Blocks",
+				"type": [
+					"column",
+					"string"
+				]
+			}
+		]
+	},
 	"CollectData.Rdc3_Atr": {
 		"inputs": [
 			{
@@ -576,7 +652,7 @@
 				"name": "ImagescStyle",
 				"kind": "namevalue",
 				"type": [
-					"row",
+					"vector",
 					"cell"
 				],
 				"purpose": "要传递给imagesc的其它参数"
@@ -585,7 +661,7 @@
 				"name": "SubTitles",
 				"kind": "namevalue",
 				"type": [
-					"row",
+					"vector",
 					"string"
 				],
 				"purpose": "每个泳道的小标题"
@@ -603,11 +679,20 @@
 				"name": "TLStyle",
 				"kind": "namevalue",
 				"type": [
-					"row",
+					"vector",
 					"cell"
 				],
 				"purpose": "要传递给tiledlayout的其它参数",
 				"default": "{'TileSpacing','none','Padding','compact'}"
+			},
+			{
+				"name": "TLParent",
+				"kind": "namevalue",
+				"type": [
+					"matlab.graphics.Graphics",
+					"scalar"
+				],
+				"purpose":"作图的父对象"
 			}
 		],
 		"outputs": [

@@ -1,4 +1,4 @@
-钙数据分析作图工具包，分为数据收集CollectData、数据转码Transcode和作图DrawFigure，3个子包。依赖[埃博拉酱的MATLAB工具包](https://github.com/Silver-Fang/EbolaChanMatlabToolbox)和[GuanLab杂项](https://github.com/ShanghaitechGuanjisongLab/Miscellany)
+钙数据分析作图工具包，分为数据收集CollectData、数据转码Transcode和作图DrawFigure，3个子包。依赖[埃博拉酱的函数助手](https://github.com/Silver-Fang/EbolaChansFunctionHelpers)和[埃博拉酱的Windows工具](https://github.com/Silver-Fang/EbolaChansWindowsTools)
 # 目录
 [数据格式规范](#数据格式规范)
 - [Rdc3格式](#Rdc3格式)
@@ -8,6 +8,7 @@
 [CollectData](#CollectData)
 - [MetaTags_METags](#MetaTags_METags)
 - [MTRM_Rdc3](#MTRM_Rdc3)
+- [Rdc2_MECgBCalcium](#Rdc2_MECgBCalcium)
 - [Rdc3_Atr](#Rdc3_Atr)
 - [Rdc3s_MECgBCalcium](#Rdc3s_MECgBCalcium)
 - [RMs_MECgRaws](#RMs_MECgRaws)
@@ -135,6 +136,40 @@ Measurements文件的标准文件名格式是：
 Filename(1,1)string，自动生成的rdc3文件名
 
 还返回Rdc3文件格式的fps Name nrd_c raw_data raw_tag字段，详见[Rdc3格式](#Rdc3格式)。
+## Rdc2_MECgBCalcium
+将一系列Rdc2文件读入为MECgBCalcium内存格式
+### Rdc2格式
+基本文件名规范：
+```
+rdc2_data_<日期>_<鼠名>_<实验条件>_<细胞群体>.mat
+```
+中间可插入_分割的可选信息字段。文件内包含下述字段：
+
+fps(1,1)double，采样率
+
+tag(1,1)struct，保存每个Block的标准TagCode，分为两个字段：
+- type(1,:)double
+- t_no(1,:)double
+
+cell_no(1,1)double，细胞个数
+
+rd_c2(1,:,:)struct，数据结构体，包含一个字段d(:,:)double，第1维是Trial，第2维是时间
+
+mouse_name(1,:)char，文件名的一部分
+### 输入参数
+SelectedBlocks，必需。如果是(:,1)string，每个元素必须是MECgBCalcium标准Block名；如果是(:,2)，每一行必须是MECgBCalcium标准TagCode。每个标准Block名对应一个TagCode(1,2)，TagCode作为行列坐标，对应块名记录在TranslateTable中。
+
+Rdc2Paths(:,1)string，可选。要读入的Rdc2文件路径。默认打开文件对话框要求用户手动选择文件。
+### 返回值（MECgBCalcium格式）
+Calcium(:,:,:,:)cell，ΔF/F₀处理后的钙信号测量值。第1维Block，第2维细胞群，第3维实验，第4维小鼠。元胞内(:,:,:)double，第1维Trial，第2维时间，第3维细胞
+
+Mice(:,1)string，鼠名
+
+Experiments(:,1)string，实验名
+
+CellGroups(:,1)string，细胞群名
+
+Blocks(:,1)string，标准Block名。
 ## Rdc3_Atr
 将[Rdc3格式](#Rdc3格式)文件收集为Atr格式内存数据
 ### Atr格式
@@ -296,6 +331,8 @@ SubTitles(1,:)string，每个泳道的小标题。如不指定，将不显示小
 CBLabel(1,1)string，颜色棒的标签。如不指定，将不显示标签。
 
 TLStyle(1,:)cell={'TileSpacing','none','Padding','compact'}，本函数调用tiledlayout布局泳道，此处指定要传递给tiledlayout的其它参数。
+
+TLParent(1,1)matlab.graphics.Graphics，作图的父对象
 ### 返回值
 Layout(1,1)matlab.graphics.layout.TiledChartLayout，使用tiledlayout生成的作图的布局。
 
