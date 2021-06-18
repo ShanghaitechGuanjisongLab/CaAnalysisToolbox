@@ -1,4 +1,4 @@
-钙数据分析作图工具包，分为数据收集CollectData、数据转码Transcode和作图DrawFigure，3个子包。依赖[埃博拉酱的函数助手](https://github.com/Silver-Fang/EbolaChansFunctionHelpers)和[埃博拉酱的Windows工具](https://github.com/Silver-Fang/EbolaChansWindowsTools)
+钙数据分析作图工具包，分为数据收集CollectData、数据转码Transcode和作图DrawFigure，3个子包。依赖[舔水行为分析](https://github.com/ShanghaitechGuanjisongLab/WaterLickAnalysis)
 # 目录
 [数据格式规范](#数据格式规范)
 - [Rdc3格式](#Rdc3格式)
@@ -196,10 +196,10 @@ Blocks(:,1)string，标准Block名。
 Calcium(:,:,:,:)cell，ΔF/F₀处理后的钙信号测量值。第1维Block，第2维细胞群，第3维实验，第4维小鼠。元胞内(:,:,:)double，第1维Trial，第2维时间，第3维细胞。
 ## RMs_MECgRaws
 将多个RM文件读入为MECgRaws内存格式
-### 输入参数
-RMPaths(:,1)string，可选，RM文件路径。默认打开文件对话框要求用户手动选择。
+### 名称-值参数
+RMPaths(:,1)string，RM文件路径。默认打开文件对话框要求用户手动选择。
 
-SizeT(1,1)uint16=65535，名称-值参数，每个文件要截取的时间帧数，应当短于所有文件中的时间帧数，否则会出错。如果设为65535，将取所有时间帧。
+SizeT(1,1)uint16=65535，每个文件要截取的时间帧数，应当短于所有文件中的时间帧数，否则会出错。如果设为65535，将取所有时间帧。
 ### 返回值
 返回[MECgRawsTags格式](#MECgRawsTags格式)标准中的Mice Experiments CellGroups MECgRaws四个字段。
 ### RM文件格式

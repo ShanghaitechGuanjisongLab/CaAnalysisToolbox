@@ -295,7 +295,7 @@
 		"inputs": [
 			{
 				"name": "RMPaths",
-				"kind": "ordered",
+				"kind": "namevalue",
 				"type": [
 					"vector",
 					"string"
