@@ -1,52 +1,38 @@
-钙数据分析作图工具包，分为数据收集CollectData、数据转码Transcode和作图DrawFigure，3个子包。依赖[舔水行为分析](https://github.com/ShanghaitechGuanjisongLab/WaterLickAnalysis)
+钙数据分析作图工具包，分为数据收集CollectData、数据转码Transcode和作图DrawFigure，3个子包。依赖[埃博拉酱的作图工具包](https://github.com/Silver-Fang/EbolaChansFiguringToolbox)
 # 目录
 [数据格式规范](#数据格式规范)
-- [Rdc3格式](#Rdc3格式)
 - [MECgRawsTags格式](#MECgRawsTags格式)
 - [MECgBCalcium格式](#MECgBCalcium格式)
+- [Rdc3格式](#Rdc3格式)
+- [RM2.0文件格式](#RM2.0文件格式)
 
 [CollectData](#CollectData)
-- [MetaTags_METags](#MetaTags_METags)
-- [MTRM_Rdc3](#MTRM_Rdc3)
-- [Rdc2_MECgBCalcium](#Rdc2_MECgBCalcium)
-- [Rdc3_Atr](#Rdc3_Atr)
-- [Rdc3s_MECgBCalcium](#Rdc3s_MECgBCalcium)
-- [RMs_MECgRaws](#RMs_MECgRaws)
+- [MetaTags_METags](#MetaTags_METags) 将多个MetaTags文件读入为METags内存格式
+- [MTRM_Rdc3](#MTRM_Rdc3) 将MECgRawsTags标准格式文件读入为Rdc3格式文件的某些字段
+- [Rdc2_MECgBCalcium](#Rdc2_MECgBCalcium) 将一系列Rdc2文件读入为MECgBCalcium内存格式
+- [Rdc3_Atr](#Rdc3_Atr) 将[Rdc3格式](#Rdc3格式)文件收集为Atr格式内存数据
+- [Rdc3s_MECgBCalcium](#Rdc3s_MECgBCalcium) 将一系列[Rdc3格式](#Rdc3格式)文件读入为MECgBCalcium内存格式
+- [RMs_MECgRaws](#RMs_MECgRaws) 将多个RM2.0文件读入为MECgRaws内存格式
+- [RMs_MtEcTct](#RMs_MtEcTct) 将多个RM2.0文件读入为MtEcTct表内存格式
 
 [Transcode](#Transcode)
-- [Atrs_TrialwiseTrace](#Atrs_TrialwiseTrace)
-- [MEBCalcium_ElasticChart](#MEBCalcium_ElasticChart)
-- [MECgRaws_OverallHeatmap](#MECgRaws_OverallHeatmap)
-- [MECgSplitTrialsToExperimentsByTag](#MECgSplitTrialsToExperimentsByTag)
-- [MECgSplitTrialsToExperimentsEqually](#MECgSplitTrialsToExperimentsEqually)
-- [SortBeforeOH](#SortBeforeOH)
+- [Atrs_TrialwiseTrace](#Atrs_TrialwiseTrace) 将Atr格式数据转码为适合于TrialwiseTrace作图的格式
+- [MEBCalcium_ElasticChart](#MEBCalcium_ElasticChart) 将[MECgBCalcium格式](#MECgBCalcium格式)数据准备成适合ElasticChart的格式
+- [MECgRaws_OverallHeatmap](#MECgRaws_OverallHeatmap) 准备MECgRaws格式数据，使其适合于DrawFigure.OverallHeatmap
+- [MECgSplitTrialsToExperimentsByTag](#MECgSplitTrialsToExperimentsByTag) 按照指定的分类函数将MECgRaws的Trial分METags拆分到不同的实验
+- [MECgSplitTrialsToExperimentsEqually](#MECgSplitTrialsToExperimentsEqually) 将MECgRaws的Trial等量拆分到不同的实验
+- [SortBeforeOH](#SortBeforeOH) 在做总览热图OverallHeatmap之前对细胞进行分群排序。
 
 [DrawFigure](#DrawFigure)
-- [ElasticChart](#ElasticChart)
-- [OverallHeatmap](#OverallHeatmap)
-- [TrialwiseTrace](#TrialwiseTrace)
+- [ElasticChart](#ElasticChart) 弹簧图，反映点之间的距离关系。
+- [OverallHeatmap](#OverallHeatmap) 显示每个细胞不同天的全Trial平均Trace
+- [TrialwiseTrace](#TrialwiseTrace) 作单Trial追踪图，图上有多条相互断开的折线在X轴上排布，每条线可具有误差阴影和刺激范围
 
 [包外工具函数](#包外工具函数)
-- [LMHColorMap](#LMHColorMap)
-- [SplitOneSingleDimensionByAnother](#SplitOneSingleDimensionByAnother)
+- [LMHColorMap](#LMHColorMap) 生成低、中、高三阶段分布的Colormap
+- [SplitOneSingleDimensionByAnother](#SplitOneSingleDimensionByAnother) 将数组某一维度的数据按照分组标记拆分到另一个单一维度中，使得那个单一维度扩张，多出来的空位用指定值补全。
 # 数据格式规范
 本节描述了多个函数中用到的数据格式规范。
-## Rdc3格式
-本格式存储了一天内一只鼠一个细胞群体多个不同刺激Block的钙和标数据，包含处理前全长连续数据和经过ΔF/F₀处理、分Trial的数据。
-
-fps(1,1)double，采样率
-
-raw_tag(1,:,:)double，原始标。第2维是时间，第3维是Block
-
-base_block(1,:)double，指示哪些Block无需拆分
-
-nrd_c(:,:)cell，拆分、标准化后的数据。第1维是Block，第2维是细胞。元胞内是(:,:)double，第1维是Trial，第2维是时间
-
-Name(:,1)cell，每个Block的名称。元胞内是(1,:)char。
-
-TagCode(:,2)double，每个Block的编码，与Name对应。对应关系见[翻译表](+CollectData/TranslateTable.mat)
-
-raw_data(:,:,:)double，原始数据。第1维是时间，第2维是细胞，第3维是Block
 ## MECgRawsTags格式
 本格式存储了多天、多只鼠、多个不同实验、多个Trial、多个细胞群体的分Trial的细胞测量数据。以下字段在某些函数中并不全都需要。
 
@@ -71,6 +57,28 @@ CellGroups(:,1)string，细胞群体名
 Blocks(:,1)string，模块名
 
 MECgBCacium(:,:,:,:)cell，钙信号测量值。第1维是模块，第2维是细胞群，第3维是实验，第4维是鼠。元胞内是(:,:,:)double，第1维是Trial，第2维是时间，第3维是细胞。
+## Rdc3格式
+本格式存储了一天内一只鼠一个细胞群体多个不同刺激Block的钙和标数据，包含处理前全长连续数据和经过ΔF/F₀处理、分Trial的数据。
+
+fps(1,1)double，采样率
+
+raw_tag(1,:,:)double，原始标。第2维是时间，第3维是Block
+
+base_block(1,:)double，指示哪些Block无需拆分
+
+nrd_c(:,:)cell，拆分、标准化后的数据。第1维是Block，第2维是细胞。元胞内是(:,:)double，第1维是Trial，第2维是时间
+
+Name(:,1)cell，每个Block的名称。元胞内是(1,:)char。
+
+TagCode(:,2)double，每个Block的编码，与Name对应。对应关系见[翻译表](+CollectData/TranslateTable.mat)
+
+raw_data(:,:,:)double，原始数据。第1维是时间，第2维是细胞，第3维是Block
+## RM2.0文件格式
+RM2.0文件的标准文件名格式是：
+```
+<鼠名>.<日期时间>.<实验名>.<光电参数>._<Trial号>.已配准.<细胞类群>.测量.mat
+```
+其中只有一个字段Measurements(:,:)single，第1维是时间，第2维是细胞。
 # CollectData
 该包负责将数据文件读入内存，整理成便于引用计算分析的格式。
 ## MetaTags_METags
@@ -195,19 +203,22 @@ Blocks(:,1)string，标准Block名。
 
 Calcium(:,:,:,:)cell，ΔF/F₀处理后的钙信号测量值。第1维Block，第2维细胞群，第3维实验，第4维小鼠。元胞内(:,:,:)double，第1维Trial，第2维时间，第3维细胞。
 ## RMs_MECgRaws
-将多个RM文件读入为MECgRaws内存格式
+将多个RM2.0文件读入为MECgRaws内存格式
 ### 名称-值参数
-RMPaths(:,1)string，RM文件路径。默认打开文件对话框要求用户手动选择。
+RMPaths(:,1)string，[RM2.0文件](#RM2.0文件格式)路径。默认打开文件对话框要求用户手动选择。
 
 SizeT(1,1)uint16=65535，每个文件要截取的时间帧数，应当短于所有文件中的时间帧数，否则会出错。如果设为65535，将取所有时间帧。
 ### 返回值
 返回[MECgRawsTags格式](#MECgRawsTags格式)标准中的Mice Experiments CellGroups MECgRaws四个字段。
-### RM文件格式
-RM文件的标准文件名格式是：
-```
-<鼠名>.<日期时间>.<实验名>.<光电参数>._<Trial号>.Registered.<细胞类群>.Measurements.mat
-```
-其中只有一个字段Measurements(:,:)single，第1维是时间，第2维是细胞。
+## RMs_MtEcTct
+将多个RM2.0文件读入为MtEcTct表内存格式
+
+可选参数：RMPaths(:,1)string，[RM2.0文件](#RM2.0文件格式)路径。默认打开文件对话框要求用户手动选择。
+
+返回值：MtEcTct(:,2)timetable，包含三列：
+1. Time(1,1)datetime，实验时间
+2. Mouse(1,1)string，鼠名
+3. Calcium(:,:)table，第1维细胞群体，第2维实验设计。单元格内是(:,:,:)single，原始钙信号。第1维时间，第2维细胞，第3维回合。
 # Transcode
 本包包含数据转码函数，将CollectData收集到的数据转化为适合于DrawFigure作图的格式。
 ## Atrs_TrialwiseTrace

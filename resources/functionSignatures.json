@@ -300,7 +300,7 @@
 					"vector",
 					"string"
 				],
-				"purpose": "RM文件路径"
+				"purpose": "RM2.0文件路径"
 			},
 			{
 				"name": "SizeT",
@@ -337,6 +337,28 @@
 				"type": [
 					"3d",
 					"cell"
+				]
+			}
+		]
+	},
+	"CollectData.RMs_MtEcTct": {
+		"inputs": [
+			{
+				"name": "RMPaths",
+				"kind": "ordered",
+				"type": [
+					"vector",
+					"string"
+				],
+				"purpose": "RM2.0文件路径"
+			}
+		],
+		"outputs": [
+			{
+				"name": "MtEcTct",
+				"type": [
+					"size=:,2",
+					"timetable"
 				]
 			}
 		]
@@ -692,7 +714,7 @@
 					"matlab.graphics.Graphics",
 					"scalar"
 				],
-				"purpose":"作图的父对象"
+				"purpose": "作图的父对象"
 			}
 		],
 		"outputs": [
