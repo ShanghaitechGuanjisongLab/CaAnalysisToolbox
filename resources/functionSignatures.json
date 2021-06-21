@@ -476,18 +476,21 @@
 			}
 		]
 	},
-	"Transcode.FilewiseTable_MeTgTct":{
-		"inputs":[
+	"Transcode.FilewiseTable_MeTgTct": {
+		"inputs": [
 			{
-				"name":"FilewiseTable",
-				"kind":"ordered",
-				"type":"timetable"
+				"name": "FilewiseTable",
+				"kind": "ordered",
+				"type": "timetable"
 			}
 		],
-		"outputs":[
+		"outputs": [
 			{
-				"name":"MeTgTct",
-				"type":["size=:,2","timetable"]
+				"name": "MeTgTct",
+				"type": [
+					"size=:,2",
+					"timetable"
+				]
 			}
 		]
 	},
@@ -620,10 +623,13 @@
 				"purpose": "第1维是泳道内不同的行，第2维是泳道内不同的列，第3维是不同的泳道"
 			},
 			{
-				"name":"ByMaxGroup",
-				"kind":"ordered",
-				"type":["scalar","logical"],
-				"purpose":"是否采用最大组法"
+				"name": "ByMaxGroup",
+				"kind": "ordered",
+				"type": [
+					"scalar",
+					"logical"
+				],
+				"purpose": "是否采用最大组法"
 			}
 		],
 		"outputs": [
@@ -715,6 +721,15 @@
 	"DrawFigure.OverallHeatmap": {
 		"inputs": [
 			{
+				"name": "TiledLayout",
+				"kind": "required",
+				"type": [
+					"scalar",
+					"matlab.graphics.layout.TiledChartLayout"
+				],
+				"purpose":"将要在其中作图的分块布局"
+			},
+			{
 				"name": "Data",
 				"kind": "required",
 				"type": [
@@ -726,18 +741,9 @@
 			{
 				"name": "Flags",
 				"kind": "ordered",
-				"type": "choices={'HideXAxis','HideYAxis','ShowColorBar'}",
+				"type": "choices={'HideXAxis','HideYAxis'}",
 				"repeating": true,
 				"purpose": "重复设置功能旗帜"
-			},
-			{
-				"name": "Colormap",
-				"kind": "ordered",
-				"type": [
-					"double",
-					"size=:,3"
-				],
-				"purpose": "颜色映射"
 			},
 			{
 				"name": "ImagescStyle",
@@ -749,6 +755,15 @@
 				"purpose": "要传递给imagesc的其它参数"
 			},
 			{
+				"name": "Colormap",
+				"kind": "namevalue",
+				"type": [
+					"double",
+					"size=:,3"
+				],
+				"purpose": "颜色映射"
+			},
+			{
 				"name": "SubTitles",
 				"kind": "namevalue",
 				"type": [
@@ -756,49 +771,14 @@
 					"string"
 				],
 				"purpose": "每个泳道的小标题"
-			},
-			{
-				"name": "CBLabel",
-				"kind": "namevalue",
-				"type": [
-					"scalar",
-					"string"
-				],
-				"purpose": "颜色棒的标签"
-			},
-			{
-				"name": "TLStyle",
-				"kind": "namevalue",
-				"type": [
-					"vector",
-					"cell"
-				],
-				"purpose": "要传递给tiledlayout的其它参数",
-				"default": "{'TileSpacing','none','Padding','compact'}"
-			},
-			{
-				"name": "TLParent",
-				"kind": "namevalue",
-				"type": [
-					"matlab.graphics.Graphics",
-					"scalar"
-				],
-				"purpose": "作图的父对象"
 			}
 		],
 		"outputs": [
 			{
-				"name": "Layout",
+				"name": "Axes",
 				"type": [
-					"scalar",
-					"matlab.graphics.layout.TiledChartLayout"
-				]
-			},
-			{
-				"name": "ColorBar",
-				"type": [
-					"scalar",
-					"matlab.graphics.illustration.ColorBar"
+					"2d",
+					"cell"
 				]
 			}
 		]

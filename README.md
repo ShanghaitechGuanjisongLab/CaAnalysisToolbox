@@ -345,34 +345,37 @@ Positions(1,:)complex，弹簧系统平衡后的各点位置。
 ## OverallHeatmap
 显示每个细胞不同天的全Trial平均Trace
 ```MATLAB
-DrawFigure.OverallHeatmap(rand(300,300,3),"HideYAxis","ShowColorbar","ImagescStyle",{"XData",[0 3]},"SubTitles",["1" "2" "3"],"CBLabel","我是颜色棒");
+load("OverallHeatmapData.mat");
+figure;
+FigureAspectRatio(3,2,"Amplify");
+TL=tiledlayout("flow",TileSpacing='tight',Padding='tight');
+Axes=SuperCell2Mat(DrawFigure.OverallHeatmap(TL,OHData,"Colormap",LMHColorMap([0 0 1],[1 1 1],[1 0 0]),"ImagescStyle",{"XData",[1 500]/30-2,[-1,1]}));
+arrayfun(@(Ax,T)title(Ax,T),Axes(1,:),["Blue-only" "Audio-only" "Water-only" "X-lick-water 1" "X-lick-water 2"]);
+arrayfun(@(Ax,L)ylabel(Ax,L),Axes(:,1),["Original 1";"Original 2";"Transfer 1";"Transfer 2"]);
+xlabel(TL,"Time(s) from stimulus");
+ylabel(TL,"Cell ID");
+CB=colorbar;
+CB.Layout.Tile="east";
+CB.Label.String="ΔF/F_0";
+CB.TickLabels=round(2.^str2double(CB.TickLabels)-1,1,"significant");
 ```
-![](+DrawFigure/示例/OverallHeatmap.svg)
+![](示例/OverallHeatmap.svg)
+### 必需参数
+TiledLayout(1,1)matlab.graphics.layout.TiledChartLayout，将要在其中作图的分块布局。
 
-因为生成的是随机数据，图线位置可能不同，但样式应当一致。
-### 位置参数
-Data(:,:,:)，必需，作图数据。第1维是不同的细胞，将作图为不同行；第2维是Trial内的时间轴，将作图到同一行；第3维是不同的天，将水平展开为不同的泳道
+Data(:,:,:)，作图数据。第1维是不同的细胞，将作图为不同行；第2维是Trial内的时间轴，将作图到同一行；第3维是不同的天，将水平展开为不同的泳道
 ### 重复参数
 Flags(1,1)string，可以重复设置以下旗帜：
 - HideXAxis，隐藏X轴
 - HideYAxis，隐藏Y轴
-- ShowColorbar，显示颜色棒
 ### 名称-值对组参数
-Colormap(:,3)double，可选，颜色映射。如不指定，将由MATLAB自动设置。
+ImagescStyle(1,:)cell=cell(1,0)，本函数调用imagesc绘图，此处指定要传递给imagesc的其它参数。建议至少设置XData和YData参数，保证XY坐标尺度正确。
 
-ImagescStyle(1,:)cell，本函数调用imagesc绘图，此处指定要传递给imagesc的其它参数。默认行为是，如果Data有正有负，则设为{[-AbsMax,AbsMax]}，其中AbsMax=max(abs(Data),[],"all")；否则为{}。建议至少设置XData和YData参数，保证XY坐标尺度正确。
+Colormap(:,3)double，颜色映射。如不指定，将由MATLAB自动设置。
 
 SubTitles(1,:)string，每个泳道的小标题。如不指定，将不显示小标题。
-
-CBLabel(1,1)string，颜色棒的标签。如不指定，将不显示标签。
-
-TLStyle(1,:)cell={'TileSpacing','none','Padding','compact'}，本函数调用tiledlayout布局泳道，此处指定要传递给tiledlayout的其它参数。
-
-TLParent(1,1)matlab.graphics.Graphics，作图的父对象
 ### 返回值
-Layout(1,1)matlab.graphics.layout.TiledChartLayout，使用tiledlayout生成的作图的布局。
-
-ColorBar(1,1)matlab.graphics.illustration.ColorBar，如果制定了ShowColorBar旗帜，返回该颜色棒对象
+Axes(:,:)cell，每个元胞里是对应位置的图的坐标轴，可用于后期修饰
 ## TrialwiseTrace
 作单Trial追踪图，图上有多条相互断开的折线在X轴上排布，每条线可具有误差阴影和刺激范围
 ```MATLAB
