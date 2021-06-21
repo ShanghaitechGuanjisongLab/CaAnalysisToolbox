@@ -618,6 +618,12 @@
 					"numeric"
 				],
 				"purpose": "第1维是泳道内不同的行，第2维是泳道内不同的列，第3维是不同的泳道"
+			},
+			{
+				"name":"ByMaxGroup",
+				"kind":"ordered",
+				"type":["scalar","logical"],
+				"purpose":"是否采用最大组法"
 			}
 		],
 		"outputs": [
