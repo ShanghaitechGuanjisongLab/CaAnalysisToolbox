@@ -3,6 +3,7 @@
 [数据格式规范](#数据格式规范)
 - [MECgRawsTags格式](#MECgRawsTags格式)
 - [MECgBCalcium格式](#MECgBCalcium格式)
+- [MeTgTct表](#MeTgTct表)
 - [Rdc3格式](#Rdc3格式)
 - [RM2.0文件格式](#RM2.0文件格式)
 
@@ -12,11 +13,13 @@
 - [Rdc2_MECgBCalcium](#Rdc2_MECgBCalcium) 将一系列Rdc2文件读入为MECgBCalcium内存格式
 - [Rdc3_Atr](#Rdc3_Atr) 将[Rdc3格式](#Rdc3格式)文件收集为Atr格式内存数据
 - [Rdc3s_MECgBCalcium](#Rdc3s_MECgBCalcium) 将一系列[Rdc3格式](#Rdc3格式)文件读入为MECgBCalcium内存格式
+- [RMs_FilewiseTable](#RMs_FilewiseTable) 将RM2.0文件读入表，每行一个文件，列出文件名上的基本属性，用于进一步灵活筛选
 - [RMs_MECgRaws](#RMs_MECgRaws) 将多个RM2.0文件读入为MECgRaws内存格式
 - [RMs_MtEcTct](#RMs_MtEcTct) 将多个RM2.0文件读入为MtEcTct表内存格式
 
 [Transcode](#Transcode)
 - [Atrs_TrialwiseTrace](#Atrs_TrialwiseTrace) 将Atr格式数据转码为适合于TrialwiseTrace作图的格式
+- [FilewiseTable_MeTgTct](#FilewiseTable_MeTgTct) 将FilewiseTable读入为MeTgTct内存格式
 - [MEBCalcium_ElasticChart](#MEBCalcium_ElasticChart) 将[MECgBCalcium格式](#MECgBCalcium格式)数据准备成适合ElasticChart的格式
 - [MECgRaws_OverallHeatmap](#MECgRaws_OverallHeatmap) 准备MECgRaws格式数据，使其适合于DrawFigure.OverallHeatmap
 - [MECgSplitTrialsToExperimentsByTag](#MECgSplitTrialsToExperimentsByTag) 按照指定的分类函数将MECgRaws的Trial分METags拆分到不同的实验
@@ -57,6 +60,11 @@ CellGroups(:,1)string，细胞群体名
 Blocks(:,1)string，模块名
 
 MECgBCacium(:,:,:,:)cell，钙信号测量值。第1维是模块，第2维是细胞群，第3维是实验，第4维是鼠。元胞内是(:,:,:)double，第1维是Trial，第2维是时间，第3维是细胞。
+## MeTgTct表
+包含三列：
+1. Mouse(1,1)string，鼠名
+2. Experiments(1,1)string，实验设计
+3. Calcium(:,:)timetable，第1维实验时间，第2维细胞群体。单元格内是(:,:,:)single，原始钙信号。第1维采样时点，第2维细胞，第3维回合。
 ## Rdc3格式
 本格式存储了一天内一只鼠一个细胞群体多个不同刺激Block的钙和标数据，包含处理前全长连续数据和经过ΔF/F₀处理、分Trial的数据。
 
@@ -202,6 +210,14 @@ CellGroups(:,1)string，细胞群名
 Blocks(:,1)string，标准Block名。
 
 Calcium(:,:,:,:)cell，ΔF/F₀处理后的钙信号测量值。第1维Block，第2维细胞群，第3维实验，第4维小鼠。元胞内(:,:,:)double，第1维Trial，第2维时间，第3维细胞。
+## RMs_FilewiseTable
+将RM2.0文件读入表，每行一个文件，列出文件名上的基本属性，用于进一步灵活筛选
+### 可选参数
+RMPaths(:,1)string，RM2.0文件路径，默认打开文件对话框让用户选择
+
+DSTArguments(1,:)cell={["Mouse" "Experiment" "Photoelectricity" "Trial" "CellGroup"],".","TimeField",2,"IgnoreKeywords","已配准"}，本函数将RM文件名交给DelimitedStrings2Table进行字段解析，在这里提供要传递给DelimitedStrings2Table的其它参数。
+### 返回值
+FilewiseTable tabular，每个文件的详细信息和其中存储的钙数据
 ## RMs_MECgRaws
 将多个RM2.0文件读入为MECgRaws内存格式
 ### 名称-值参数
@@ -210,15 +226,14 @@ RMPaths(:,1)string，[RM2.0文件](#RM2.0文件格式)路径。默认打开文�
 SizeT(1,1)uint16=65535，每个文件要截取的时间帧数，应当短于所有文件中的时间帧数，否则会出错。如果设为65535，将取所有时间帧。
 ### 返回值
 返回[MECgRawsTags格式](#MECgRawsTags格式)标准中的Mice Experiments CellGroups MECgRaws四个字段。
-## RMs_MtEcTct
-将多个RM2.0文件读入为MtEcTct表内存格式
+## RMs_MeTgTct
+将多个RM2.0文件读入为MeTgTct表内存格式
+
+如果实验中包含随机穿插回合，可能需要使用FilewiseTable进行过渡，而不是直接将RM2.0文件读入为MeTgTct。
 
 可选参数：RMPaths(:,1)string，[RM2.0文件](#RM2.0文件格式)路径。默认打开文件对话框要求用户手动选择。
 
-返回值：MtEcTct(:,2)timetable，包含三列：
-1. Time(1,1)datetime，实验时间
-2. Mouse(1,1)string，鼠名
-3. Calcium(:,:)table，第1维细胞群体，第2维实验设计。单元格内是(:,:,:)single，原始钙信号。第1维时间，第2维细胞，第3维回合。
+返回值：[MeTgTct](#MeTgTct表)(:,2)timetable
 # Transcode
 本包包含数据转码函数，将CollectData收集到的数据转化为适合于DrawFigure作图的格式。
 ## Atrs_TrialwiseTrace
@@ -241,6 +256,12 @@ TrialsFromEnd(1,:)uint8{mustBePositive}=[]，从末尾倒数，要取出哪些Tr
 MeanLines(:,:)double，第1维是不同的平均线，第2维是一条平均线上的不同时点数值。
 
 ErrorShadows(:,:)double，第1维对应每条平均线的误差，第2维是一条平均线不同时点的误差
+## FilewiseTable_MeTgTct
+将FilewiseTable读入为MeTgTct内存格式
+
+可选参数：FilewiseTable timetable，默认从CollectData.RMs_FilewiseTable取得
+
+返回值：[MeTgTct](#MeTgTct表)(:,2)timetable
 ## MEBCalcium_ElasticChart
 将[MECgBCalcium格式](#MECgBCalcium格式)数据准备成适合ElasticChart的格式
 

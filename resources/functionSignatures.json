@@ -291,6 +291,54 @@
 			}
 		]
 	},
+	"CollectData.RMs_FilewiseTable": {
+		"inputs": [
+			{
+				"mutuallyExclusiveGroup": [
+					[
+						{
+							"name": "RMPaths",
+							"kind": "ordered",
+							"type": [
+								"string",
+								"vector"
+							],
+							"purpose": "RM2.0文件路径"
+						},
+						{
+							"name": "DSTArguments",
+							"kind": "ordered",
+							"type": [
+								"cell",
+								"vector"
+							],
+							"purpose": "要传递给DelimitedStrings2Table的其它参数"
+						}
+					],
+					[
+						{
+							"name": "DSTArguments",
+							"kind": "ordered",
+							"type": [
+								"cell",
+								"vector"
+							],
+							"purpose": "要传递给DelimitedStrings2Table的其它参数"
+						},
+						{
+							"name": "RMPaths",
+							"kind": "ordered",
+							"type": [
+								"string",
+								"vector"
+							],
+							"purpose": "RM2.0文件路径"
+						}
+					]
+				]
+			}
+		]
+	},
 	"CollectData.RMs_MECgRaws": {
 		"inputs": [
 			{
@@ -341,7 +389,7 @@
 			}
 		]
 	},
-	"CollectData.RMs_MtEcTct": {
+	"CollectData.RMs_MeTgTct": {
 		"inputs": [
 			{
 				"name": "RMPaths",
@@ -355,7 +403,7 @@
 		],
 		"outputs": [
 			{
-				"name": "MtEcTct",
+				"name": "MeTgTct",
 				"type": [
 					"size=:,2",
 					"timetable"
@@ -425,6 +473,21 @@
 					"2d",
 					"double"
 				]
+			}
+		]
+	},
+	"Transcode.FilewiseTable_MeTgTct":{
+		"inputs":[
+			{
+				"name":"FilewiseTable",
+				"kind":"ordered",
+				"type":"timetable"
+			}
+		],
+		"outputs":[
+			{
+				"name":"MeTgTct",
+				"type":["size=:,2","timetable"]
 			}
 		]
 	},
