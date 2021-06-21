@@ -15,7 +15,7 @@
 - [Rdc3s_MECgBCalcium](#Rdc3s_MECgBCalcium) 将一系列[Rdc3格式](#Rdc3格式)文件读入为MECgBCalcium内存格式
 - [RMs_FilewiseTable](#RMs_FilewiseTable) 将RM2.0文件读入表，每行一个文件，列出文件名上的基本属性，用于进一步灵活筛选
 - [RMs_MECgRaws](#RMs_MECgRaws) 将多个RM2.0文件读入为MECgRaws内存格式
-- [RMs_MtEcTct](#RMs_MtEcTct) 将多个RM2.0文件读入为MtEcTct表内存格式
+- [RMs_MeTgTct](#RMs_MeTgTct) 将多个RM2.0文件读入为MtEcTct表内存格式
 
 [Transcode](#Transcode)
 - [Atrs_TrialwiseTrace](#Atrs_TrialwiseTrace) 将Atr格式数据转码为适合于TrialwiseTrace作图的格式
