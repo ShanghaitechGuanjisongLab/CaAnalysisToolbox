@@ -1,4 +1,4 @@
-钙数据分析作图工具包，分为数据收集CollectData、数据转码Transcode和作图DrawFigure，3个子包。依赖[埃博拉酱的作图工具包](https://github.com/Silver-Fang/EbolaChansFiguringToolbox)
+钙数据分析作图工具包。所有函数位于CaAnalyzeToolbox包下，使用前需导入。分为数据收集CollectData、数据转码Transcode和作图DrawFigure，3个子包。依赖[埃博拉酱的作图工具包](https://github.com/Silver-Fang/EbolaChansFiguringToolbox)
 # 目录
 [数据格式规范](#数据格式规范)
 - [MECgRawsTags格式](#MECgRawsTags格式)
@@ -24,15 +24,16 @@
 - [MECgRaws_OverallHeatmap](#MECgRaws_OverallHeatmap) 准备MECgRaws格式数据，使其适合于DrawFigure.OverallHeatmap
 - [MECgSplitTrialsToExperimentsByTag](#MECgSplitTrialsToExperimentsByTag) 按照指定的分类函数将MECgRaws的Trial分METags拆分到不同的实验
 - [MECgSplitTrialsToExperimentsEqually](#MECgSplitTrialsToExperimentsEqually) 将MECgRaws的Trial等量拆分到不同的实验
+- [MeTgTct_OverallHeatmap](#MeTgTct_OverallHeatmap) 将MeTgTct表转换为适合全局热图（DrawFigure.OverallHeatmap）的格式
 - [SortBeforeOH](#SortBeforeOH) 在做总览热图OverallHeatmap之前对细胞进行分群排序。
 
 [DrawFigure](#DrawFigure)
 - [ElasticChart](#ElasticChart) 弹簧图，反映点之间的距离关系。
+- [LMHColorMap](#LMHColorMap) 生成低、中、高三阶段分布的Colormap
 - [OverallHeatmap](#OverallHeatmap) 显示每个细胞不同天的全Trial平均Trace
 - [TrialwiseTrace](#TrialwiseTrace) 作单Trial追踪图，图上有多条相互断开的折线在X轴上排布，每条线可具有误差阴影和刺激范围
 
 [包外工具函数](#包外工具函数)
-- [LMHColorMap](#LMHColorMap) 生成低、中、高三阶段分布的Colormap
 - [SplitOneSingleDimensionByAnother](#SplitOneSingleDimensionByAnother) 将数组某一维度的数据按照分组标记拆分到另一个单一维度中，使得那个单一维度扩张，多出来的空位用指定值补全。
 # 数据格式规范
 本节描述了多个函数中用到的数据格式规范。
@@ -63,7 +64,7 @@ MECgBCacium(:,:,:,:)cell，钙信号测量值。第1维是模块，第2维是细
 ## MeTgTct表
 包含三列：
 1. Mouse(1,1)string，鼠名
-2. Experiments(1,1)string，实验设计
+2. Session(1,1)string，实验设计
 3. Calcium(:,:)timetable，第1维实验时间，第2维细胞群体。单元格内是(:,:,:)single，原始钙信号。第1维采样时点，第2维细胞，第3维回合。
 ## Rdc3格式
 本格式存储了一天内一只鼠一个细胞群体多个不同刺激Block的钙和标数据，包含处理前全长连续数据和经过ΔF/F₀处理、分Trial的数据。
@@ -84,7 +85,7 @@ raw_data(:,:,:)double，原始数据。第1维是时间，第2维是细胞，第
 ## RM2.0文件格式
 RM2.0文件的标准文件名格式是：
 ```
-<鼠名>.<日期时间>.<实验名>.<光电参数>._<Trial号>.已配准.<细胞类群>.测量.mat
+<鼠名>.<日期时间>.<会话名>.<光电参数>._<Trial号>.已配准.<细胞类群>.测量.mat
 ```
 其中只有一个字段Measurements(:,:)single，第1维是时间，第2维是细胞。
 # CollectData
@@ -308,6 +309,29 @@ SplitNumber(1,1)uint8，拆分个数
 RawSplit(:,1,:)cell，Experiment维度拆分后的源数据
 
 TagSplit(:,1)cell，Experiment维度拆分后的标数据
+## MeTgTct_OverallHeatmap
+将MeTgTct表转换为适合全局热图（DrawFigure.OverallHeatmap）的格式
+```MATLAB
+import CaAnalyzeToolbox.Transcode.*
+MeTgTct=FilewiseTable_MeTgTct(UpdateFilewiseTableByMteTtTr(SessionsToUpdate="BlueWaterAir"));
+ST0404=[ ...
+	"BlueOnlyTrial","WaterOnlyTrial","AirOnlyTrial", ...
+	"BlueLickWater","BlueLickWater","BlueLickWater","BlueLickWater", ...
+	"BlueOnlyTrial","WaterOnlyTrial","AirOnlyTrial", ...
+	"BlueAir","BlueAir","BlueAir","BlueAir", ...
+	"BlueOnlyTrial","WaterOnlyTrial","AirOnlyTrial"];
+OH0404=MeTgTct_OverallHeatmap(MeTgTct(startsWith(MeTgTct.Mouse,"0404"),:),ST0404,true,BaseSamples=1:60);
+```
+MeTgTct是包含多只鼠、多群细胞、多个会话的全部数据表。要根据这张表作热图，首先每只鼠的每群细胞需要一个图窗，图窗里每个分块（热图泳道）是一个会话（或者从穿插会话中按照回合分类拆分出的子会话）的中位数汇总数据。每个会话在图窗中的排列顺序是需要用户指定的。此外还支持取对数、求ΔF/F₀等附加功能。
+### 位置参数
+MeTgTct(:,3)table，必需。包含所有测量数据的总表。可由FilewiseTable_MeTgTct取得。
+TrialSequence(1,:)string，必需，每个会话在分块图窗中的排列顺序。如果同类会话有多次重复，则必需多次指定相同的会话名，程序会自动按照时间顺序排列这些相同会话名对应的不同数据。
+DoLog2(1,1)logical=false，可选，是否将最终数据取对数。如果使用此附加功能，必须指定BaseSamples，否则不会对结果产生影响。
+### 名称值参数
+SamplePoints(1,:)uint16，要包含哪些采样点。譬如每个回合有500个数据点，只想取前300个，那么将该参数指定为1:300
+BaseSamples(1,:)uint16，要将哪些采样点作为基线。如果不指定此参数，将返回未经处理的原始数据，也不会取对数（即使指定了DoLog2=true）。如果指定了此参数，将把指定位置的采样点求平均作为基线（F₀），计算ΔF/F₀返回；此时若还制定了DoLog2=true，则将返回log2(F/F₀)（注意不是log2(ΔF/F₀)，避免负数取对数出现复数）
+### 返回值
+OHData table，每行一只鼠，每列一个细胞群。每个单元格内是(:,:,:)single，第1维细胞，第2维时间，第3维回合，可用于DrawFigure.OverallHeatmap作图。
 ## SortBeforeOH
 在做总览热图OverallHeatmap之前对细胞进行分群排序。
 
@@ -342,6 +366,20 @@ TextStyle(1,:)cell，文字样式，将传递给text，默认{'Color','red','Hor
 PlotStyle(1,:)cell，线条样式，将传递给plot，默认{'blue'}
 ### 返回值
 Positions(1,:)complex，弹簧系统平衡后的各点位置。
+## LMHColorMap
+生成低、中、高三阶段分布的Colormap
+### 必需位置参数
+Lowest(1,3)double，最小值的RGB颜色，应在[0,1]之间
+
+Middle(1,3)double，中间值的RGB颜色，应在[0,1]之间
+
+Highest(1,3)double，最大值的RGB颜色，应在[0,1]之间
+### 可选位置参数
+LowSteps(1,1)uint8=255，低段区分色阶数
+
+HighSteps(1,1)uint8=255，高段区分色阶数
+### 返回值
+Colormap(:,3)double，生成的颜色映射图
 ## OverallHeatmap
 显示每个细胞不同天的全Trial平均Trace
 ```MATLAB
@@ -436,20 +474,6 @@ Shadows(:,1)matlab.graphics.primitive.Patch，误差阴影，fill函数返回的
 
 Stimuli(:,1)matlab.graphics.primitive.Patch，刺激范围，fill函数返回的填充对象。如果StimuRange未指定，将不返回该参数，尝试取得该返回值将导致错误。
 # 包外工具函数
-## LMHColorMap
-生成低、中、高三阶段分布的Colormap
-### 必需位置参数
-Lowest(1,3)double，最小值的RGB颜色，应在[0,1]之间
-
-Middle(1,3)double，中间值的RGB颜色，应在[0,1]之间
-
-Highest(1,3)double，最大值的RGB颜色，应在[0,1]之间
-### 可选位置参数
-LowSteps(1,1)uint8=255，低段区分色阶数
-
-HighSteps(1,1)uint8=255，高段区分色阶数
-### 返回值
-Colormap(:,3)double，生成的颜色映射图
 ## SplitOneSingleDimensionByAnother
 将数组某一维度的数据按照分组标记拆分到另一个单一维度中，使得那个单一维度扩张，多出来的空位用指定值补全。
 

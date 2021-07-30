@@ -1,5 +1,5 @@
 {
-	"CaProcessingToolbox.CollectData.MetaTags_METags": {
+	"CaAnalyzeToolbox.CollectData.MetaTags_METags": {
 		"inputs": [
 			{
 				"name": "MTPaths",
@@ -49,7 +49,7 @@
 			}
 		]
 	},
-	"CaProcessingToolbox.CollectData.MTRM_Rdc3": {
+	"CaAnalyzeToolbox.CollectData.MTRM_Rdc3": {
 		"inputs": [
 			{
 				"name": "TagThreshold",
@@ -120,7 +120,7 @@
 		],
 		"platforms": "win64"
 	},
-	"CaProcessingToolbox.CollectData.Rdc2_MECgBCalcium": {
+	"CaAnalyzeToolbox.CollectData.Rdc2_MECgBCalcium": {
 		"inputs": [
 			{
 				"mutuallyExclusiveGroup": [
@@ -196,7 +196,7 @@
 			}
 		]
 	},
-	"CaProcessingToolbox.CollectData.Rdc3_Atr": {
+	"CaAnalyzeToolbox.CollectData.Rdc3_Atr": {
 		"inputs": [
 			{
 				"name": "FilePath",
@@ -215,7 +215,7 @@
 			}
 		]
 	},
-	"CaProcessingToolbox.CollectData.Rdc3s_MECgBCalcium": {
+	"CaAnalyzeToolbox.CollectData.Rdc3s_MECgBCalcium": {
 		"inputs": [
 			{
 				"mutuallyExclusiveGroup": [
@@ -291,7 +291,7 @@
 			}
 		]
 	},
-	"CaProcessingToolbox.CollectData.RMs_FilewiseTable": {
+	"CaAnalyzeToolbox.CollectData.RMs_FilewiseTable": {
 		"inputs": [
 			{
 				"mutuallyExclusiveGroup": [
@@ -339,7 +339,7 @@
 			}
 		]
 	},
-	"CaProcessingToolbox.CollectData.RMs_MECgRaws": {
+	"CaAnalyzeToolbox.CollectData.RMs_MECgRaws": {
 		"inputs": [
 			{
 				"name": "RMPaths",
@@ -389,7 +389,7 @@
 			}
 		]
 	},
-	"CaProcessingToolbox.CollectData.RMs_MeTgTct": {
+	"CaAnalyzeToolbox.CollectData.RMs_MeTgTct": {
 		"inputs": [
 			{
 				"name": "RMPaths",
@@ -411,238 +411,7 @@
 			}
 		]
 	},
-	"CaProcessingToolbox.Transcode.Atrs_TrialwiseTrace": {
-		"inputs": [
-			{
-				"name": "Atrs",
-				"kind": "required",
-				"type": [
-					"column",
-					"cell"
-				],
-				"purpose": "每个元胞内是一个Atr数据单元"
-			},
-			{
-				"name": "TagCodes",
-				"kind": "required",
-				"type": [
-					"size=:,2",
-					"positive"
-				],
-				"purpose": "根据所需实验条件设置的Atr元胞索引"
-			},
-			{
-				"name": "TimeIndices",
-				"kind": "required",
-				"type": [
-					"row",
-					"positive"
-				],
-				"purpose": "要取出的时间索引（采样帧，不是真实时间）"
-			},
-			{
-				"name": "TrialsFromStart",
-				"kind": "namevalue",
-				"type": [
-					"row",
-					"positive"
-				],
-				"purpose": "从开头计算，要取出哪些Trial"
-			},
-			{
-				"name": "TrialsFromEnd",
-				"kind": "namevalue",
-				"type": [
-					"row",
-					"positive"
-				],
-				"purpose": "从末尾倒数，要取出哪些Trial"
-			}
-		],
-		"outputs": [
-			{
-				"name": "MeanLines",
-				"type": [
-					"2d",
-					"double"
-				]
-			},
-			{
-				"name": "ErrorShadows",
-				"type": [
-					"2d",
-					"double"
-				]
-			}
-		]
-	},
-	"CaProcessingToolbox.Transcode.FilewiseTable_MeTgTct": {
-		"inputs": [
-			{
-				"name": "FilewiseTable",
-				"kind": "ordered",
-				"type": "timetable"
-			}
-		],
-		"outputs": [
-			{
-				"name": "MeTgTct",
-				"type": [
-					"size=:,2",
-					"timetable"
-				]
-			}
-		]
-	},
-	"CaProcessingToolbox.Transcode.MECgRaws_OverallHeatmap": {
-		"inputs": [
-			{
-				"name": "MECgRaws",
-				"kind": "required",
-				"type": [
-					"3d",
-					"cell"
-				],
-				"purpose": "MECgRaws格式数据，详见自述文档"
-			},
-			{
-				"name": "BaseLength",
-				"kind": "required",
-				"type": "positive",
-				"purpose": "刺激前基线时间点数"
-			},
-			{
-				"name": "Flags",
-				"kind": "flag",
-				"type": "choices={'DoLog','PickMedian'}",
-				"repeating": true,
-				"purpose": "树立旗帜，是否启用特殊功能"
-			}
-		],
-		"outputs": [
-			{
-				"name": "OHData",
-				"type": [
-					"3d",
-					"double"
-				]
-			}
-		]
-	},
-	"CaProcessingToolbox.Transcode.MECgSplitTrialsToExperimentsByTag": {
-		"inputs": [
-			{
-				"name": "CgRaw",
-				"kind": "required",
-				"type": [
-					"size=1,1,:",
-					"cell"
-				],
-				"purpose": "MECgRaws源数据，Mouse和Experiment维度单一，可以有多个CellGroup"
-			},
-			{
-				"name": "TagTable",
-				"kind": "required",
-				"type": "tabular",
-				"purpose": "METags元胞内的单个表格，与CgRaw的Mouse和Experiment对应"
-			},
-			{
-				"name": "ClassifyFunction",
-				"kind": "required",
-				"type": "function_handle",
-				"purpose": "分标函数句柄。接受TagTable的某一行作为输入，输出分Experiment标识用于分组"
-			}
-		],
-		"outputs": [
-			{
-				"name": "RawSplit",
-				"type": [
-					"size=:,1,:",
-					"cell"
-				]
-			},
-			{
-				"name": "TagSplit",
-				"type": [
-					"column",
-					"cell"
-				]
-			}
-		]
-	},
-	"CaProcessingToolbox.Transcode.MECgSplitTrialsToExperimentsEqually": {
-		"inputs": [
-			{
-				"name": "CgRaw",
-				"kind": "required",
-				"type": [
-					"size=1,1,:",
-					"cell"
-				],
-				"purpose": "MECgRaws源数据，Mouse和Experiment维度单一，可以有多个CellGroup"
-			},
-			{
-				"name": "TagTable",
-				"kind": "required",
-				"type": "tabular",
-				"purpose": "METags元胞内的单个表格，与CgRaw的Mouse和Experiment对应"
-			},
-			{
-				"name": "SplitNumber",
-				"kind": "required",
-				"type": "positive",
-				"purpose": "拆分个数"
-			}
-		],
-		"outputs": [
-			{
-				"name": "RawSplit",
-				"type": [
-					"size=:,1,:",
-					"cell"
-				]
-			},
-			{
-				"name": "TagSplit",
-				"type": [
-					"column",
-					"cell"
-				]
-			}
-		]
-	},
-	"CaProcessingToolbox.Transcode.SortBeforeOH": {
-		"inputs": [
-			{
-				"name": "Data",
-				"kind": "required",
-				"type": [
-					"3d",
-					"numeric"
-				],
-				"purpose": "第1维是泳道内不同的行，第2维是泳道内不同的列，第3维是不同的泳道"
-			},
-			{
-				"name": "ByMaxGroup",
-				"kind": "ordered",
-				"type": [
-					"scalar",
-					"logical"
-				],
-				"purpose": "是否采用最大组法"
-			}
-		],
-		"outputs": [
-			{
-				"name": "Data",
-				"type": [
-					"3d",
-					"numeric"
-				]
-			}
-		]
-	},
-	"CaProcessingToolbox.DrawFigure.ElasticChart": {
+	"CaAnalyzeToolbox.DrawFigure.ElasticChart": {
 		"inputs": [
 			{
 				"name": "DistanceMatrix",
@@ -718,7 +487,52 @@
 			}
 		]
 	},
-	"CaProcessingToolbox.DrawFigure.OverallHeatmap": {
+	"CaAnalyzeToolbox.DrawFigure.LMHColorMap": {
+		"inputs": [
+			{
+				"name": "Lowest",
+				"kind": "required",
+				"type": "size=1,3",
+				"purpose": "最小值的RGB颜色，应在[0,1]之间"
+			},
+			{
+				"name": "Middle",
+				"kind": "required",
+				"type": "size=1,3",
+				"purpose": "中间值的RGB颜色，应在[0,1]之间"
+			},
+			{
+				"name": "Highest",
+				"kind": "required",
+				"type": "size=1,3",
+				"purpose": "最大值的RGB颜色，应在[0,1]之间"
+			},
+			{
+				"name": "LowSteps",
+				"kind": "ordered",
+				"type": "positive",
+				"purpose": "低段区分色阶数",
+				"default": 255
+			},
+			{
+				"name": "HighSteps",
+				"kind": "ordered",
+				"type": "positive",
+				"purpose": "高段区分色阶数",
+				"default": 255
+			}
+		],
+		"outputs": [
+			{
+				"name": "Colormap",
+				"type": [
+					"size=:,3",
+					"double"
+				]
+			}
+		]
+	},
+	"CaAnalyzeToolbox.DrawFigure.OverallHeatmap": {
 		"inputs": [
 			{
 				"name": "TiledLayout",
@@ -783,7 +597,7 @@
 			}
 		]
 	},
-	"CaProcessingToolbox.DrawFigure.TrialwiseTrace": {
+	"CaAnalyzeToolbox.DrawFigure.TrialwiseTrace": {
 		"inputs": [
 			{
 				"name": "MeanLines",
@@ -896,52 +710,279 @@
 			}
 		]
 	},
-	"CaProcessingToolbox.LMHColorMap": {
+	"CaAnalyzeToolbox.Transcode.Atrs_TrialwiseTrace": {
 		"inputs": [
 			{
-				"name": "Lowest",
+				"name": "Atrs",
 				"kind": "required",
-				"type": "size=1,3",
-				"purpose": "最小值的RGB颜色，应在[0,1]之间"
+				"type": [
+					"column",
+					"cell"
+				],
+				"purpose": "每个元胞内是一个Atr数据单元"
 			},
 			{
-				"name": "Middle",
+				"name": "TagCodes",
 				"kind": "required",
-				"type": "size=1,3",
-				"purpose": "中间值的RGB颜色，应在[0,1]之间"
+				"type": [
+					"size=:,2",
+					"positive"
+				],
+				"purpose": "根据所需实验条件设置的Atr元胞索引"
 			},
 			{
-				"name": "Highest",
+				"name": "TimeIndices",
 				"kind": "required",
-				"type": "size=1,3",
-				"purpose": "最大值的RGB颜色，应在[0,1]之间"
+				"type": [
+					"row",
+					"positive"
+				],
+				"purpose": "要取出的时间索引（采样帧，不是真实时间）"
 			},
 			{
-				"name": "LowSteps",
-				"kind": "ordered",
-				"type": "positive",
-				"purpose": "低段区分色阶数",
-				"default": 255
+				"name": "TrialsFromStart",
+				"kind": "namevalue",
+				"type": [
+					"row",
+					"positive"
+				],
+				"purpose": "从开头计算，要取出哪些Trial"
 			},
 			{
-				"name": "HighSteps",
-				"kind": "ordered",
-				"type": "positive",
-				"purpose": "高段区分色阶数",
-				"default": 255
+				"name": "TrialsFromEnd",
+				"kind": "namevalue",
+				"type": [
+					"row",
+					"positive"
+				],
+				"purpose": "从末尾倒数，要取出哪些Trial"
 			}
 		],
 		"outputs": [
 			{
-				"name": "Colormap",
+				"name": "MeanLines",
 				"type": [
-					"size=:,3",
+					"2d",
+					"double"
+				]
+			},
+			{
+				"name": "ErrorShadows",
+				"type": [
+					"2d",
 					"double"
 				]
 			}
 		]
 	},
-	"CaProcessingToolbox.SplitOneSingleDimensionByAnother": {
+	"CaAnalyzeToolbox.Transcode.FilewiseTable_MeTgTct": {
+		"inputs": [
+			{
+				"name": "FilewiseTable",
+				"kind": "ordered",
+				"type": "timetable"
+			}
+		],
+		"outputs": [
+			{
+				"name": "MeTgTct",
+				"type": [
+					"size=:,2",
+					"timetable"
+				]
+			}
+		]
+	},
+	"CaAnalyzeToolbox.Transcode.MECgRaws_OverallHeatmap": {
+		"inputs": [
+			{
+				"name": "MECgRaws",
+				"kind": "required",
+				"type": [
+					"3d",
+					"cell"
+				],
+				"purpose": "MECgRaws格式数据，详见自述文档"
+			},
+			{
+				"name": "BaseLength",
+				"kind": "required",
+				"type": "positive",
+				"purpose": "刺激前基线时间点数"
+			},
+			{
+				"name": "Flags",
+				"kind": "flag",
+				"type": "choices={'DoLog','PickMedian'}",
+				"repeating": true,
+				"purpose": "树立旗帜，是否启用特殊功能"
+			}
+		],
+		"outputs": [
+			{
+				"name": "OHData",
+				"type": [
+					"3d",
+					"double"
+				]
+			}
+		]
+	},
+	"CaAnalyzeToolbox.Transcode.MECgSplitTrialsToExperimentsByTag": {
+		"inputs": [
+			{
+				"name": "CgRaw",
+				"kind": "required",
+				"type": [
+					"size=1,1,:",
+					"cell"
+				],
+				"purpose": "MECgRaws源数据，Mouse和Experiment维度单一，可以有多个CellGroup"
+			},
+			{
+				"name": "TagTable",
+				"kind": "required",
+				"type": "tabular",
+				"purpose": "METags元胞内的单个表格，与CgRaw的Mouse和Experiment对应"
+			},
+			{
+				"name": "ClassifyFunction",
+				"kind": "required",
+				"type": "function_handle",
+				"purpose": "分标函数句柄。接受TagTable的某一行作为输入，输出分Experiment标识用于分组"
+			}
+		],
+		"outputs": [
+			{
+				"name": "RawSplit",
+				"type": [
+					"size=:,1,:",
+					"cell"
+				]
+			},
+			{
+				"name": "TagSplit",
+				"type": [
+					"column",
+					"cell"
+				]
+			}
+		]
+	},
+	"CaAnalyzeToolbox.Transcode.MECgSplitTrialsToExperimentsEqually": {
+		"inputs": [
+			{
+				"name": "CgRaw",
+				"kind": "required",
+				"type": [
+					"size=1,1,:",
+					"cell"
+				],
+				"purpose": "MECgRaws源数据，Mouse和Experiment维度单一，可以有多个CellGroup"
+			},
+			{
+				"name": "TagTable",
+				"kind": "required",
+				"type": "tabular",
+				"purpose": "METags元胞内的单个表格，与CgRaw的Mouse和Experiment对应"
+			},
+			{
+				"name": "SplitNumber",
+				"kind": "required",
+				"type": "positive",
+				"purpose": "拆分个数"
+			}
+		],
+		"outputs": [
+			{
+				"name": "RawSplit",
+				"type": [
+					"size=:,1,:",
+					"cell"
+				]
+			},
+			{
+				"name": "TagSplit",
+				"type": [
+					"column",
+					"cell"
+				]
+			}
+		]
+	},
+	"CaAnalyzeToolbox.Transcode.MeTgTct_OverallHeatmap":{
+		"inputs":[
+			{
+				"name":"MeTgTct",
+				"kind":"required",
+				"type":["size=:,3","table"],
+				"purpose":"包含所有测量数据的总表"
+			},
+			{
+				"name":"TrialSequence",
+				"kind":"required",
+				"type":["vector","string"],
+				"purpose":"每个会话在分块图窗中的排列顺序"
+			},
+			{
+				"name":"DoLog2",
+				"kind":"ordered",
+				"type":["scalar","logical"],
+				"purpose":"是否将最终数据取对数",
+				"default":false
+			},
+			{
+				"name":"SamplePoints",
+				"kind":"namevalue",
+				"type":["vector","numeric"],
+				"purpose":"要包含哪些采样点"
+			},
+			{
+				"name":"BaseSamples",
+				"kind":"namevalue",
+				"type":["vector","numeric"],
+				"purpose":"要将哪些采样点作为基线"
+			}
+		],
+		"outputs":[
+			{
+				"name":"OHData",
+				"type":"table"
+			}
+		]
+	},
+	"CaAnalyzeToolbox.Transcode.SortBeforeOH": {
+		"inputs": [
+			{
+				"name": "Data",
+				"kind": "required",
+				"type": [
+					"3d",
+					"numeric"
+				],
+				"purpose": "第1维是泳道内不同的行，第2维是泳道内不同的列，第3维是不同的泳道"
+			},
+			{
+				"name": "ByMaxGroup",
+				"kind": "ordered",
+				"type": [
+					"scalar",
+					"logical"
+				],
+				"purpose": "是否采用最大组法"
+			}
+		],
+		"outputs": [
+			{
+				"name": "Data",
+				"type": [
+					"3d",
+					"numeric"
+				]
+			}
+		]
+	},
+	"CaAnalyzeToolbox.SplitOneSingleDimensionByAnother": {
 		"inputs": [
 			{
 				"name": "Array",
