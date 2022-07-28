@@ -1,3 +1,5 @@
+# 此项目已归档，不再维护，新的开发请转向[统一实验分析作图](https://github.com/ShanghaitechGuanjisongLab/Unified-Experimental-Analysis-and-Figuring)
+
 钙数据分析作图工具包。所有函数位于CaAnalyzeToolbox包下，使用前需导入。分为数据收集CollectData、数据转码Transcode和作图DrawFigure，3个子包。依赖[埃博拉酱的作图工具包](https://github.com/Silver-Fang/EbolaChansFiguringToolbox)
 # 目录
 [数据格式规范](#数据格式规范)
